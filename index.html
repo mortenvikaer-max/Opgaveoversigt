@@ -2,11 +2,11 @@
 <html lang="da">
 <head>
   <meta charset="UTF-8">
-  <title>Dynamisk opgaveoversigt</title>
+  <title>Opgaveoversigt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
-      --bg: #f5f7fb;
+      --bg: #ffffff;
       --card-bg: #ffffff;
       --border-radius: 14px;
       --shadow: 0 6px 18px rgba(0,0,0,0.06);
@@ -22,13 +22,13 @@
 
     * {
       box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Cambria, "Times New Roman", serif;
     }
 
     body {
       margin: 0;
       padding: 24px;
-      background: radial-gradient(circle at top left, #e5eeff 0, var(--bg) 45%);
+      background: var(--bg);
       color: var(--text-main);
     }
 
@@ -39,20 +39,8 @@
 
     h1 {
       margin-top: 0;
-      margin-bottom: 8px;
+      margin-bottom: 16px;
       font-size: 2rem;
-    }
-
-    .subtitle {
-      margin-bottom: 24px;
-      color: var(--text-muted);
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
-      gap: 24px;
-      align-items: flex-start;
     }
 
     .card {
@@ -66,41 +54,45 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
-    label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 500;
-      margin-bottom: 4px;
-      color: var(--text-main);
-    }
-
-    .field-group {
       margin-bottom: 12px;
     }
 
-    input[type="text"],
-    input[type="date"],
-    select {
-      width: 100%;
-      padding: 10px 12px;
-      font-size: 0.95rem;
-      border-radius: 10px;
-      border: 1px solid #d0d7e2;
-      background: #f9fafb;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
     }
 
-    input[type="text"]:focus,
-    input[type="date"]:focus,
-    select:focus {
+    .controls-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .sort-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .sort-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sort-group select {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #d0d7e2;
+      background: #f9fafb;
+      font-size: 0.9rem;
+    }
+
+    .sort-group select:focus {
       outline: none;
       border-color: var(--accent);
       box-shadow: 0 0 0 2px var(--accent-soft);
@@ -151,7 +143,7 @@
     }
 
     .task-table-wrapper {
-      max-height: 70vh;
+      max-height: 75vh;
       overflow: auto;
       border-radius: var(--border-radius);
     }
@@ -166,7 +158,7 @@
     thead {
       position: sticky;
       top: 0;
-      background: #eef2f9;
+      background: rgba(211, 211, 211, 0.4); /* lys grå, 40% transparens */
       z-index: 1;
     }
 
@@ -187,6 +179,7 @@
     tbody tr {
       background: #ffffff;
       transition: background 0.1s ease, transform 0.05s ease;
+      cursor: pointer;
     }
 
     tbody tr:nth-child(even) {
@@ -220,24 +213,11 @@
       background: var(--status-done);
     }
 
-    .notes-link {
-      border-radius: 999px;
-      padding: 5px 10px;
-      border: none;
-      background: #edf2ff;
-      cursor: pointer;
-      font-size: 0.8rem;
-    }
-
-    .notes-link:hover {
-      background: #dee4ff;
-    }
-
     .text-muted {
       color: var(--text-muted);
     }
 
-    /* Modal til noter */
+    /* Modal generelt */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -256,7 +236,7 @@
       background: var(--card-bg);
       border-radius: 18px;
       box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
-      max-width: 520px;
+      max-width: 560px;
       width: 100%;
       padding: 20px 22px 18px;
     }
@@ -287,26 +267,81 @@
       background: #f1f5f9;
     }
 
-    .modal textarea {
-      width: 100%;
-      min-height: 150px;
-      border-radius: 12px;
-      border: 1px solid #d0d7e2;
-      padding: 10px 12px;
-      resize: vertical;
+    .modal-body {
+      margin-top: 4px;
+    }
+
+    .field-group {
+      margin-bottom: 12px;
+    }
+
+    .field-group label {
+      display: block;
       font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: var(--text-main);
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      border-radius: 10px;
+      border: 1px solid #d0d7e2;
+      background: #f9fafb;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+      background: #ffffff;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
     }
 
     .modal-footer {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
       gap: 8px;
-      margin-top: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
     }
 
-    @media (max-width: 900px) {
-      .layout {
-        grid-template-columns: 1fr;
+    .modal-footer-right {
+      display: flex;
+      gap: 8px;
+    }
+
+    .last-modified {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 12px;
+      }
+
+      .modal {
+        max-width: 95%;
+      }
+
+      .controls-row {
+        justify-content: flex-start;
       }
     }
   </style>
@@ -314,127 +349,152 @@
 <body>
   <div class="container">
     <h1>Opgaveoversigt</h1>
-    <p class="subtitle">Tilføj og administrér opgaver på tværs af områder.</p>
 
-    <div class="layout">
-      <!-- Formular til ny opgave -->
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">Ny opgave</div>
+    <section class="card">
+      <div class="card-header">
+        <div class="card-title">Aktuelle opgaver</div>
+        <button type="button" id="addTaskBtn" class="button-primary">
+          + Tilføj opgave
+        </button>
+      </div>
+
+      <div class="controls-row">
+        <div class="sort-group">
+          <label for="sortBySelect">
+            Sortér efter
+            <select id="sortBySelect">
+              <option value="deadline">Deadline</option>
+              <option value="status">Status</option>
+              <option value="lastModified">Sidst ændret</option>
+            </select>
+          </label>
+
+          <label for="sortDirectionSelect">
+            Rækkefølge
+            <select id="sortDirectionSelect">
+              <option value="asc">Stigende</option>
+              <option value="desc">Faldende</option>
+            </select>
+          </label>
         </div>
+      </div>
 
-        <form id="taskForm">
+      <div class="task-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Område</th>
+              <th>Opgave</th>
+              <th>Kontakt (intern)</th>
+              <th>Kontakt (ekstern)</th>
+              <th>Deadline</th>
+              <th>Status</th>
+              <th>Sidst ændret</th>
+              <th>Noter</th>
+            </tr>
+          </thead>
+          <tbody id="taskTableBody">
+            <!-- Rækker indsættes dynamisk -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal til tilføj/redigér opgave -->
+  <div class="modal-backdrop" id="taskModalBackdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="taskModalTitle">Tilføj opgave</div>
+        <button class="modal-close" id="closeTaskModalBtn" aria-label="Luk">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="taskModalForm">
           <div class="field-group">
-            <label for="area">Område</label>
-            <input type="text" id="area" name="area" required placeholder="Fx Kommunikation, IT, HR">
+            <label for="modalArea">Område</label>
+            <input type="text" id="modalArea" required placeholder="Fx Kommunikation, IT, HR">
           </div>
 
           <div class="field-group">
-            <label for="task">Opgave</label>
-            <input type="text" id="task" name="task" required placeholder="Kort beskrivelse af opgaven">
+            <label for="modalTask">Opgave</label>
+            <input type="text" id="modalTask" required placeholder="Kort beskrivelse af opgaven">
           </div>
 
           <div class="field-group">
-            <label for="internalContact">Kontaktperson (intern)</label>
-            <input type="text" id="internalContact" name="internalContact" required placeholder="Navn på intern kontakt">
+            <label for="modalInternalContact">Kontaktperson (intern)</label>
+            <input type="text" id="modalInternalContact" required placeholder="Navn på intern kontakt">
           </div>
 
           <div class="field-group">
-            <label for="externalContact">Kontaktperson (ekstern)</label>
-            <input type="text" id="externalContact" name="externalContact" placeholder="Evt. ekstern kontakt">
+            <label for="modalExternalContact">Kontaktperson (ekstern)</label>
+            <input type="text" id="modalExternalContact" placeholder="Evt. ekstern kontakt">
           </div>
 
           <div class="field-group">
-            <label for="deadline">Deadline</label>
-            <input type="date" id="deadline" name="deadline" required>
+            <label for="modalDeadline">Deadline</label>
+            <input type="date" id="modalDeadline" required>
           </div>
 
           <div class="field-group">
-            <label for="status">Status</label>
-            <select id="status" name="status">
+            <label for="modalStatus">Status</label>
+            <select id="modalStatus">
               <option value="not-started">Ikke begyndt</option>
               <option value="in-progress">I gang</option>
               <option value="done">Afsluttet</option>
             </select>
           </div>
 
-          <div class="field-group" style="margin-top: 18px;">
-            <button type="submit" class="button-primary">
-              + Tilføj opgave
-            </button>
+          <div class="field-group">
+            <label for="modalNotes">Noter</label>
+            <textarea id="modalNotes" placeholder="Tilføj noter til opgaven her..."></textarea>
           </div>
 
-          <p class="text-muted" style="font-size: 0.8rem; margin-top: 10px;">
-            Noter til opgaven kan tilføjes efterfølgende via “Noter”-knappen i oversigten.
-          </p>
+          <div class="last-modified" id="modalLastModified" style="display:none;"></div>
         </form>
-      </section>
-
-      <!-- Opgaveoversigt -->
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">Aktuelle opgaver</div>
-          <button type="button" id="clearAllBtn" class="button-secondary">
-            Ryd alle (kun lokalt)
-          </button>
-        </div>
-
-        <div class="task-table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Område</th>
-                <th>Opgave</th>
-                <th>Kontakt (intern)</th>
-                <th>Kontakt (ekstern)</th>
-                <th>Deadline</th>
-                <th>Status</th>
-                <th>Noter</th>
-              </tr>
-            </thead>
-            <tbody id="taskTableBody">
-              <!-- Rækker indsættes dynamisk -->
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-  </div>
-
-  <!-- Modal til noter -->
-  <div class="modal-backdrop" id="notesModalBackdrop">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">Noter til opgave</div>
-        <button class="modal-close" id="closeNotesModalBtn" aria-label="Luk noter">
-          &times;
-        </button>
-      </div>
-      <div>
-        <label for="notesTextArea">Noter</label>
-        <textarea id="notesTextArea" placeholder="Tilføj noter til opgaven her..."></textarea>
       </div>
       <div class="modal-footer">
-        <button class="button-secondary" id="cancelNotesBtn" type="button">Annullér</button>
-        <button class="button-primary" id="saveNotesBtn" type="button">Gem noter</button>
+        <button class="button-secondary" id="deleteTaskBtn" type="button" style="display:none;">
+          Slet opgave
+        </button>
+        <div class="modal-footer-right">
+          <button class="button-secondary" id="cancelTaskBtn" type="button">Annullér</button>
+          <button class="button-primary" id="saveTaskBtn" type="button">Gem</button>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Simpel in-memory liste over opgaver
-    const tasks = [];
-    let currentNotesTaskId = null;
+    const STORAGE_KEY = 'opgaveoversigt_tasks_v1';
 
-    const taskForm = document.getElementById('taskForm');
+    let tasks = [];
+    let currentEditTaskId = null;
+    let sortBy = 'deadline';
+    let sortDirection = 'asc';
+
     const taskTableBody = document.getElementById('taskTableBody');
-    const clearAllBtn = document.getElementById('clearAllBtn');
+    const addTaskBtn = document.getElementById('addTaskBtn');
 
-    const notesModalBackdrop = document.getElementById('notesModalBackdrop');
-    const notesTextArea = document.getElementById('notesTextArea');
-    const closeNotesModalBtn = document.getElementById('closeNotesModalBtn');
-    const cancelNotesBtn = document.getElementById('cancelNotesBtn');
-    const saveNotesBtn = document.getElementById('saveNotesBtn');
+    const sortBySelect = document.getElementById('sortBySelect');
+    const sortDirectionSelect = document.getElementById('sortDirectionSelect');
+
+    const taskModalBackdrop = document.getElementById('taskModalBackdrop');
+    const taskModalTitle = document.getElementById('taskModalTitle');
+    const closeTaskModalBtn = document.getElementById('closeTaskModalBtn');
+    const cancelTaskBtn = document.getElementById('cancelTaskBtn');
+    const saveTaskBtn = document.getElementById('saveTaskBtn');
+    const deleteTaskBtn = document.getElementById('deleteTaskBtn');
+    const modalLastModified = document.getElementById('modalLastModified');
+
+    const modalArea = document.getElementById('modalArea');
+    const modalTask = document.getElementById('modalTask');
+    const modalInternalContact = document.getElementById('modalInternalContact');
+    const modalExternalContact = document.getElementById('modalExternalContact');
+    const modalDeadline = document.getElementById('modalDeadline');
+    const modalStatus = document.getElementById('modalStatus');
+    const modalNotes = document.getElementById('modalNotes');
 
     function formatDate(dateStr) {
       if (!dateStr) return '';
@@ -444,6 +504,19 @@
         year: 'numeric',
         month: '2-digit',
         day: '2-digit'
+      });
+    }
+
+    function formatDateTimeFromTimestamp(ts) {
+      if (!ts) return '';
+      const date = new Date(ts);
+      if (isNaN(date.getTime())) return '';
+      return date.toLocaleString('da-DK', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
       });
     }
 
@@ -473,23 +546,88 @@
       }
     }
 
+    function getStatusOrderValue(statusValue) {
+      switch (statusValue) {
+        case 'not-started':
+          return 0;
+        case 'in-progress':
+          return 1;
+        case 'done':
+          return 2;
+        default:
+          return 99;
+      }
+    }
+
+    function loadTasksFromStorage() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          tasks = parsed.map(t => {
+            if (typeof t.lastModified !== 'number') {
+              t.lastModified = Date.now();
+            }
+            return t;
+          });
+        }
+      } catch (e) {
+        console.error('Kunne ikke læse opgaver fra localStorage', e);
+      }
+    }
+
+    function saveTasksToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+      } catch (e) {
+        console.error('Kunne ikke gemme opgaver i localStorage', e);
+      }
+    }
+
+    function getSortedTasks() {
+      const arr = [...tasks];
+      arr.sort((a, b) => {
+        let comp = 0;
+
+        if (sortBy === 'deadline') {
+          const ad = a.deadline || '';
+          const bd = b.deadline || '';
+          if (ad === bd) comp = 0;
+          else if (!ad) comp = 1;
+          else if (!bd) comp = -1;
+          else comp = ad.localeCompare(bd);
+        } else if (sortBy === 'status') {
+          comp = getStatusOrderValue(a.status) - getStatusOrderValue(b.status);
+        } else if (sortBy === 'lastModified') {
+          comp = (a.lastModified || 0) - (b.lastModified || 0);
+        }
+
+        return sortDirection === 'asc' ? comp : -comp;
+      });
+
+      return arr;
+    }
+
     function renderTasks() {
       taskTableBody.innerHTML = '';
 
-      if (tasks.length === 0) {
+      const sortedTasks = getSortedTasks();
+
+      if (sortedTasks.length === 0) {
         const emptyRow = document.createElement('tr');
         const td = document.createElement('td');
-        td.colSpan = 7;
+        td.colSpan = 8;
         td.className = 'text-muted';
         td.style.textAlign = 'center';
         td.style.padding = '20px';
-        td.textContent = 'Ingen opgaver endnu. Tilføj en opgave til venstre.';
+        td.textContent = 'Ingen opgaver endnu. Klik på "Tilføj opgave" for at komme i gang.';
         emptyRow.appendChild(td);
         taskTableBody.appendChild(emptyRow);
         return;
       }
 
-      tasks.forEach((task) => {
+      sortedTasks.forEach(task => {
         const row = document.createElement('tr');
 
         const areaTd = document.createElement('td');
@@ -505,7 +643,7 @@
         row.appendChild(internalTd);
 
         const externalTd = document.createElement('td');
-        externalTd.textContent = task.externalContact || '-';
+        externalTd.textContent = task.externalContact || '–';
         row.appendChild(externalTd);
 
         const deadlineTd = document.createElement('td');
@@ -519,104 +657,153 @@
         statusTd.appendChild(statusSpan);
         row.appendChild(statusTd);
 
+        const lastModTd = document.createElement('td');
+        lastModTd.textContent = formatDateTimeFromTimestamp(task.lastModified);
+        row.appendChild(lastModTd);
+
         const notesTd = document.createElement('td');
-        const notesButton = document.createElement('button');
-        notesButton.type = 'button';
-        notesButton.className = 'notes-link';
-        notesButton.textContent = task.notes && task.notes.trim() ? 'Se / rediger' : 'Tilføj';
-        notesButton.addEventListener('click', () => openNotesModal(task.id));
-        notesTd.appendChild(notesButton);
+        notesTd.textContent = task.notes && task.notes.trim() ? 'Tilføjet' : '–';
         row.appendChild(notesTd);
+
+        row.addEventListener('click', () => {
+          openTaskModal(task.id);
+        });
 
         taskTableBody.appendChild(row);
       });
     }
 
-    function openNotesModal(taskId) {
-      currentNotesTaskId = taskId;
-      const task = tasks.find(t => t.id === taskId);
-      notesTextArea.value = task && task.notes ? task.notes : '';
-      notesModalBackdrop.classList.add('visible');
-      notesTextArea.focus();
+    function openTaskModal(taskId = null) {
+      currentEditTaskId = taskId;
+
+      if (taskId) {
+        const task = tasks.find(t => t.id === taskId);
+        if (!task) return;
+
+        taskModalTitle.textContent = 'Redigér opgave';
+        modalArea.value = task.area || '';
+        modalTask.value = task.task || '';
+        modalInternalContact.value = task.internalContact || '';
+        modalExternalContact.value = task.externalContact || '';
+        modalDeadline.value = task.deadline || '';
+        modalStatus.value = task.status || 'not-started';
+        modalNotes.value = task.notes || '';
+
+        modalLastModified.style.display = 'block';
+        modalLastModified.textContent = 'Sidst ændret: ' + formatDateTimeFromTimestamp(task.lastModified);
+        deleteTaskBtn.style.display = 'inline-flex';
+      } else {
+        taskModalTitle.textContent = 'Tilføj opgave';
+        modalArea.value = '';
+        modalTask.value = '';
+        modalInternalContact.value = '';
+        modalExternalContact.value = '';
+        modalDeadline.value = '';
+        modalStatus.value = 'not-started';
+        modalNotes.value = '';
+
+        modalLastModified.style.display = 'none';
+        deleteTaskBtn.style.display = 'none';
+      }
+
+      taskModalBackdrop.classList.add('visible');
+      modalArea.focus();
     }
 
-    function closeNotesModal() {
-      notesModalBackdrop.classList.remove('visible');
-      currentNotesTaskId = null;
+    function closeTaskModal() {
+      taskModalBackdrop.classList.remove('visible');
+      currentEditTaskId = null;
     }
 
-    // Håndter formular-indsendelse
-    taskForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-
-      const area = document.getElementById('area').value.trim();
-      const taskName = document.getElementById('task').value.trim();
-      const internalContact = document.getElementById('internalContact').value.trim();
-      const externalContact = document.getElementById('externalContact').value.trim();
-      const deadline = document.getElementById('deadline').value;
-      const status = document.getElementById('status').value;
+    function saveTaskFromModal() {
+      const area = modalArea.value.trim();
+      const taskName = modalTask.value.trim();
+      const internalContact = modalInternalContact.value.trim();
+      const externalContact = modalExternalContact.value.trim();
+      const deadline = modalDeadline.value;
+      const status = modalStatus.value;
+      const notes = modalNotes.value;
 
       if (!area || !taskName || !internalContact || !deadline) {
-        // Simpel sikring (HTML5 required hjælper også)
-        alert('Udfyld venligst alle påkrævede felter.');
+        alert('Udfyld venligst alle påkrævede felter (Område, Opgave, Kontaktperson (intern), Deadline).');
         return;
       }
-      const newTask = {
-        id: Date.now().toString(),
-        area,
-        task: taskName,
-        internalContact,
-        externalContact,
-        deadline,
-        status,
-        notes: ''
-      };
 
-      tasks.push(newTask);
+      const now = Date.now();
+
+      if (currentEditTaskId) {
+        const existing = tasks.find(t => t.id === currentEditTaskId);
+        if (!existing) return;
+        existing.area = area;
+        existing.task = taskName;
+        existing.internalContact = internalContact;
+        existing.externalContact = externalContact;
+        existing.deadline = deadline;
+        existing.status = status;
+        existing.notes = notes;
+        existing.lastModified = now;
+      } else {
+        const newTask = {
+          id: Date.now().toString(),
+          area,
+          task: taskName,
+          internalContact,
+          externalContact,
+          deadline,
+          status,
+          notes,
+          lastModified: now
+        };
+        tasks.push(newTask);
+      }
+
+      saveTasksToStorage();
+      closeTaskModal();
       renderTasks();
-      taskForm.reset();
-      // Sæt status tilbage til "Ikke begyndt"
-      document.getElementById('status').value = 'not-started';
-    });
+    }
 
-    // Ryd alle opgaver (kun i denne session)
-    clearAllBtn.addEventListener('click', () => {
-      if (tasks.length === 0) return;
-      if (confirm('Er du sikker på, at du vil rydde alle opgaver? Dette kan ikke fortrydes.')) {
-        tasks.splice(0, tasks.length);
-        renderTasks();
-      }
-    });
+    function deleteCurrentTask() {
+      if (!currentEditTaskId) return;
+      const confirmed = confirm('Er du sikker på, at du vil slette denne opgave?');
+      if (!confirmed) return;
 
-    // Modal-knapper
-    closeNotesModalBtn.addEventListener('click', closeNotesModal);
-    cancelNotesBtn.addEventListener('click', closeNotesModal);
-
-    saveNotesBtn.addEventListener('click', () => {
-      if (!currentNotesTaskId) return;
-      const task = tasks.find(t => t.id === currentNotesTaskId);
-      if (task) {
-        task.notes = notesTextArea.value;
-      }
-      closeNotesModal();
+      tasks = tasks.filter(t => t.id !== currentEditTaskId);
+      saveTasksToStorage();
+      closeTaskModal();
       renderTasks();
-    });
+    }
 
-    // Luk modal ved klik udenfor boksen
-    notesModalBackdrop.addEventListener('click', (event) => {
-      if (event.target === notesModalBackdrop) {
-        closeNotesModal();
+    // Event listeners
+    addTaskBtn.addEventListener('click', () => openTaskModal(null));
+    closeTaskModalBtn.addEventListener('click', closeTaskModal);
+    cancelTaskBtn.addEventListener('click', closeTaskModal);
+    saveTaskBtn.addEventListener('click', saveTaskFromModal);
+    deleteTaskBtn.addEventListener('click', deleteCurrentTask);
+
+    taskModalBackdrop.addEventListener('click', (event) => {
+      if (event.target === taskModalBackdrop) {
+        closeTaskModal();
       }
     });
 
-    // Luk modal med Escape
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && notesModalBackdrop.classList.contains('visible')) {
-        closeNotesModal();
+      if (event.key === 'Escape' && taskModalBackdrop.classList.contains('visible')) {
+        closeTaskModal();
       }
     });
 
-    // Initial rendering (viser "ingen opgaver" besked)
+    sortBySelect.addEventListener('change', () => {
+      sortBy = sortBySelect.value;
+      renderTasks();
+    });
+
+    sortDirectionSelect.addEventListener('change', () => {
+      sortDirection = sortDirectionSelect.value;
+      renderTasks();
+    });
+
+    // Initial load
+    loadTasksFromStorage();
     renderTasks();
   </script>
 </body>
