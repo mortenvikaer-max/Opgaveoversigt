@@ -33,9 +33,9 @@
     }
 
     .page {
-      max-width: 1200px;
+      width: min(96vw, 1600px);  /* gør layoutet markant bredere */
       margin: 0 auto;
-      padding: 16px 24px 32px;
+      padding: 16px 16px 32px;
     }
 
     /* Topbar */
@@ -91,7 +91,7 @@
     }
 
     h1 {
-      display: none; /* Fjern visning af "Opgaveoversigt" som overskrift */
+      display: none; /* overskriften bruges ikke visuelt */
     }
 
     .card {
@@ -515,7 +515,8 @@
     /* Mobile / kort-visning */
     @media (max-width: 800px) {
       .page {
-        padding: 12px 12px 24px;
+        width: 100%;
+        padding: 12px 8px 24px;
       }
 
       .task-table-wrapper {
@@ -1035,7 +1036,7 @@
           const row = document.createElement('tr');
           row.className = 'task-row';
 
-          // Status (første kolonne)
+          // Status
           const statusTd = document.createElement('td');
           statusTd.dataset.label = 'Status';
           const statusSpan = document.createElement('span');
@@ -1102,7 +1103,7 @@
           notesTd.appendChild(notesBadge);
           row.appendChild(notesTd);
 
-          // Sidst ændret (yderst til højre)
+          // Sidst ændret
           const lastModTd = document.createElement('td');
           lastModTd.dataset.label = 'Sidst ændret';
           lastModTd.textContent = formatShortDateFromTimestamp(task.lastModified);
