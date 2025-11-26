@@ -15,9 +15,9 @@
       --text-main: #111827;
       --text-muted: #6b7280;
 
-      --status-not-started: #ffe1e1; /* lys rød */
-      --status-in-progress: #fff7d1; /* lys gul */
-      --status-done: #dcf7e2;        /* lys grøn */
+      --status-not-started: #ffe1e1;
+      --status-in-progress: #fff7d1;
+      --status-done: #dcf7e2;
     }
 
     * {
@@ -38,7 +38,6 @@
       padding: 16px 16px 32px;
     }
 
-    /* Topbar */
     .topbar {
       display: flex;
       align-items: center;
@@ -84,9 +83,7 @@
       color: #374151;
     }
 
-    h1 {
-      display: none;
-    }
+    h1 { display: false; }
 
     .card {
       background: var(--card-bg);
@@ -107,7 +104,7 @@
       font-weight: 600;
     }
 
-    /* Command bar – med filterchips */
+    /* Command bar */
     .command-bar {
       display: flex;
       flex-wrap: wrap;
@@ -198,7 +195,6 @@
       background: #ffffff;
     }
 
-    /* Filter chips */
     .filter-chip {
       display: inline-flex;
       align-items: center;
@@ -225,11 +221,8 @@
       outline: none;
     }
 
-    .chip-select:focus {
-      outline: none;
-    }
+    .chip-select:focus { outline: none; }
 
-    /* Tabel */
     .task-table-wrapper {
       max-height: 78vh;
       overflow: auto;
@@ -262,13 +255,8 @@
       vertical-align: middle;
     }
 
-    th:first-child {
-      border-top-left-radius: var(--border-radius);
-    }
-
-    th:last-child {
-      border-top-right-radius: var(--border-radius);
-    }
+    th:first-child { border-top-left-radius: var(--border-radius); }
+    th:last-child  { border-top-right-radius: var(--border-radius); }
 
     tbody tr.task-row {
       background: #ffffff;
@@ -285,11 +273,8 @@
       transform: translateY(-1px);
     }
 
-    .text-muted {
-      color: var(--text-muted);
-    }
+    .text-muted { color: var(--text-muted); }
 
-    /* Status grupper */
     .group-header-row td {
       background: #f9fafb;
       font-weight: 600;
@@ -326,7 +311,6 @@
       color: var(--text-muted);
     }
 
-    /* Status pill */
     .status-pill {
       display: inline-flex;
       align-items: center;
@@ -341,7 +325,6 @@
     .status-in-progress { background: var(--status-in-progress); }
     .status-done        { background: var(--status-done); }
 
-    /* Område tag */
     .area-tag {
       display: inline-flex;
       align-items: center;
@@ -353,7 +336,6 @@
       font-weight: 500;
     }
 
-    /* Kontakt avatar */
     .contact-cell {
       display: inline-flex;
       align-items: center;
@@ -373,10 +355,7 @@
       color: #374151;
     }
 
-    /* Opgave + underopgaver */
-    .task-title {
-      font-weight: 500;
-    }
+    .task-title { font-weight: 500; }
 
     .subtasks-meta {
       margin-top: 4px;
@@ -387,9 +366,7 @@
       color: var(--text-muted);
     }
 
-    .subtasks-count {
-      white-space: nowrap;
-    }
+    .subtasks-count { white-space: nowrap; }
 
     .subtasks-progress {
       flex: 1;
@@ -407,7 +384,6 @@
       transition: width 0.15s ease;
     }
 
-    /* Noter-indikator */
     .notes-indicator {
       font-size: 0.8rem;
       padding: 3px 8px;
@@ -428,7 +404,6 @@
       color: #1d4ed8;
     }
 
-    /* Modal */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -660,8 +635,6 @@
   </header>
 
   <div class="page">
-    <h1>Opgaveoversigt</h1>
-
     <section class="card">
       <div class="card-header">
         <div class="card-title">Aktuelle opgaver</div>
@@ -718,14 +691,13 @@
               <th>Noter</th>
             </tr>
           </thead>
-          <tbody id="taskTableBody">
-          </tbody>
+          <tbody id="taskTableBody"></tbody>
         </table>
       </div>
     </section>
   </div>
 
-  <!-- Modal til tilføj/redigér opgave -->
+  <!-- Modal -->
   <div class="modal-backdrop" id="taskModalBackdrop">
     <div class="modal">
       <div class="modal-header">
@@ -737,18 +709,19 @@
       <div class="modal-body">
         <form id="taskModalForm">
           <div class="field-group">
-            <label for="modalArea">Område</label>
+            <label for="modalArea">Område *</label>
             <input type="text" id="modalArea" required placeholder="Fx Kommunikation, IT, HR">
           </div>
 
           <div class="field-group">
-            <label for="modalTask">Opgave</label>
+            <label for="modalTask">Opgave *</label>
             <input type="text" id="modalTask" required placeholder="Kort beskrivelse af opgaven">
           </div>
 
           <div class="field-group">
             <label for="modalInternalContact">Kontaktperson (intern)</label>
-            <input type="text" id="modalInternalContact" required placeholder="Navn på intern kontakt">
+            <!-- ikke required længere -->
+            <input type="text" id="modalInternalContact" placeholder="Navn på intern kontakt">
           </div>
 
           <div class="field-group">
@@ -757,12 +730,12 @@
           </div>
 
           <div class="field-group">
-            <label for="modalDeadline">Deadline</label>
+            <label for="modalDeadline">Deadline *</label>
             <input type="date" id="modalDeadline" required>
           </div>
 
           <div class="field-group">
-            <label for="modalStatus">Status</label>
+            <label for="modalStatus">Status *</label>
             <select id="modalStatus">
               <option value="not-started">Ikke begyndt</option>
               <option value="in-progress">I gang</option>
@@ -781,8 +754,7 @@
               <input type="text" id="subtaskInput" placeholder="Skriv en underopgave...">
               <button type="button" id="addSubtaskBtn" class="button-secondary">+ Tilføj</button>
             </div>
-            <div id="subtasksList" class="subtasks-list">
-            </div>
+            <div id="subtasksList" class="subtasks-list"></div>
           </div>
         </form>
       </div>
@@ -808,7 +780,7 @@
     let searchQuery = '';
     let filterStatus = 'all';
     let filterArea = 'all';
-    let sortBy = 'deadline'; // altid stigende
+    let sortBy = 'deadline';
 
     const collapsedGroups = {
       'not-started': false,
@@ -945,7 +917,7 @@
       } else if (sortBy === 'status') {
         comp = getStatusOrderValue(a.status) - getStatusOrderValue(b.status);
       }
-      return comp; // altid stigende
+      return comp;
     }
 
     function updateAreaFilterOptions() {
@@ -1105,7 +1077,7 @@
             else if (!ad) comp = 1;
             else if (!bd) comp = -1;
             else comp = ad.localeCompare(bd);
-            return comp; // stadig stigende
+            return comp;
           }
           return compareTasks(a, b);
         });
@@ -1114,7 +1086,6 @@
           const row = document.createElement('tr');
           row.className = 'task-row';
 
-          // Status
           const statusTd = document.createElement('td');
           statusTd.dataset.label = 'Status';
           const statusSpan = document.createElement('span');
@@ -1123,7 +1094,6 @@
           statusTd.appendChild(statusSpan);
           row.appendChild(statusTd);
 
-          // Område
           const areaTd = document.createElement('td');
           areaTd.dataset.label = 'Område';
           const areaSpan = document.createElement('span');
@@ -1132,7 +1102,6 @@
           areaTd.appendChild(areaSpan);
           row.appendChild(areaTd);
 
-          // Opgave + underopgaver
           const taskTd = document.createElement('td');
           taskTd.dataset.label = 'Opgave';
           const titleDiv = document.createElement('div');
@@ -1166,34 +1135,34 @@
 
           row.appendChild(taskTd);
 
-          // Intern kontakt
           const internalTd = document.createElement('td');
           internalTd.dataset.label = 'Kontakt (intern)';
-          const contactDiv = document.createElement('div');
-          contactDiv.className = 'contact-cell';
-          const avatar = document.createElement('div');
-          avatar.className = 'avatar';
-          avatar.textContent = getInitials(task.internalContact);
-          const nameSpan = document.createElement('span');
-          nameSpan.textContent = task.internalContact;
-          contactDiv.appendChild(avatar);
-          contactDiv.appendChild(nameSpan);
-          internalTd.appendChild(contactDiv);
+          if (task.internalContact) {
+            const contactDiv = document.createElement('div');
+            contactDiv.className = 'contact-cell';
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.textContent = getInitials(task.internalContact);
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = task.internalContact;
+            contactDiv.appendChild(avatar);
+            contactDiv.appendChild(nameSpan);
+            internalTd.appendChild(contactDiv);
+          } else {
+            internalTd.textContent = '–';
+          }
           row.appendChild(internalTd);
 
-          // Ekstern kontakt
           const externalTd = document.createElement('td');
           externalTd.dataset.label = 'Kontakt (ekstern)';
           externalTd.textContent = task.externalContact || '–';
           row.appendChild(externalTd);
 
-          // Deadline
           const deadlineTd = document.createElement('td');
           deadlineTd.dataset.label = 'Deadline';
           deadlineTd.textContent = formatShortDate(task.deadline);
           row.appendChild(deadlineTd);
 
-          // Noter
           const notesTd = document.createElement('td');
           notesTd.dataset.label = 'Noter';
           const notesBadge = document.createElement('span');
@@ -1268,8 +1237,9 @@
       const status = modalStatus.value;
       const notes = modalNotes.value;
 
-      if (!area || !taskName || !internalContact || !deadline) {
-        alert('Udfyld venligst alle påkrævede felter (Område, Opgave, Kontaktperson (intern), Deadline).');
+      // kun Område, Opgave, Deadline, Status er påkrævet
+      if (!area || !taskName || !deadline || !status) {
+        alert('Udfyld venligst alle påkrævede felter (Område, Opgave, Deadline, Status).');
         return;
       }
 
@@ -1325,7 +1295,6 @@
       deleteTask(currentEditTaskId);
     }
 
-    // Event listeners
     addTaskBtn.addEventListener('click', () => openTaskModal(null));
     closeTaskModalBtn.addEventListener('click', closeTaskModal);
     cancelTaskBtn.addEventListener('click', closeTaskModal);
