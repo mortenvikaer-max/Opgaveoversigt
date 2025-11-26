@@ -95,18 +95,6 @@
       padding: 18px 20px 18px;
     }
 
-    .card-logo-wrapper {
-      display: flex;
-      justify-content: flex-start; /* venstre */
-      margin-bottom: 12px;
-    }
-
-    .card-logo-wrapper img {
-      height: 48px; /* større logo */
-      width: auto;
-      display: block;
-    }
-
     .card-header {
       display: flex;
       justify-content: space-between;
@@ -119,26 +107,28 @@
       font-weight: 600;
     }
 
-    /* Command bar */
+    /* Command bar – med filterchips */
     .command-bar {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
-
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
+      margin-bottom: 12px;
     }
 
-    .command-left,
-    .command-right {
+    .command-left {
       display: flex;
       align-items: center;
       gap: 10px;
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .command-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
@@ -157,6 +147,7 @@
       cursor: pointer;
       box-shadow: 0 3px 10px rgba(37, 99, 235, 0.4);
       transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+      white-space: nowrap;
     }
 
     .button-primary:hover {
@@ -187,12 +178,13 @@
 
     .search-input {
       position: relative;
-      min-width: 220px;
+      flex: 1;
+      min-width: 160px;
     }
 
     .search-input input {
       width: 100%;
-      padding: 7px 10px;
+      padding: 8px 11px;
       border-radius: 999px;
       border: 1px solid #d0d7e2;
       background: #ffffff;
@@ -206,31 +198,35 @@
       background: #ffffff;
     }
 
-    .select-pill {
-      padding: 7px 9px;
+    /* Filter chips */
+    .filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
       border-radius: 999px;
-      border: 1px solid #d0d7e2;
-      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      background: #f3f4f6;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .chip-label {
+      color: var(--text-muted);
+    }
+
+    .chip-select {
+      border: none;
+      background: transparent;
       font-size: 0.8rem;
       color: var(--text-main);
-    }
-
-    .select-pill:focus {
+      padding: 0;
+      margin: 0;
       outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--accent-soft);
-      background: #ffffff;
     }
 
-    .filter-group {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      font-size: 0.78rem;
-    }
-
-    .filter-label {
-      color: var(--text-muted);
+    .chip-select:focus {
+      outline: none;
     }
 
     /* Tabel */
@@ -323,7 +319,7 @@
 
     .group-color-not-started { background: #ef4444; }
     .group-color-in-progress { background: #eab308; }
-    .group-color-done { background: #22c55e; }
+    .group-color-done        { background: #22c55e; }
 
     .group-toggle {
       font-size: 0.9rem;
@@ -593,7 +589,16 @@
       }
 
       .command-bar {
-        border-radius: 12px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .command-left {
+        width: 100%;
+      }
+
+      .command-right {
+        justify-content: flex-start;
       }
 
       .task-table-wrapper { border: none; }
@@ -658,10 +663,6 @@
     <h1>Opgaveoversigt</h1>
 
     <section class="card">
-      <div class="card-logo-wrapper">
-        <img src="logo.png" alt="Logo">
-      </div>
-
       <div class="card-header">
         <div class="card-title">Aktuelle opgaver</div>
       </div>
@@ -677,9 +678,9 @@
         </div>
 
         <div class="command-right">
-          <div class="filter-group">
-            <span class="filter-label">Status</span>
-            <select id="statusFilterSelect" class="select-pill">
+          <div class="filter-chip">
+            <span class="chip-label">Status:</span>
+            <select id="statusFilterSelect" class="chip-select">
               <option value="all">Alle</option>
               <option value="not-started">Ikke begyndt</option>
               <option value="in-progress">I gang</option>
@@ -687,26 +688,18 @@
             </select>
           </div>
 
-          <div class="filter-group">
-            <span class="filter-label">Område</span>
-            <select id="areaFilterSelect" class="select-pill">
+          <div class="filter-chip">
+            <span class="chip-label">Område:</span>
+            <select id="areaFilterSelect" class="chip-select">
               <option value="all">Alle områder</option>
             </select>
           </div>
 
-          <div class="filter-group">
-            <span class="filter-label">Sortér efter</span>
-            <select id="sortBySelect" class="select-pill">
+          <div class="filter-chip">
+            <span class="chip-label">Sortér:</span>
+            <select id="sortBySelect" class="chip-select">
               <option value="deadline">Deadline</option>
               <option value="status">Status</option>
-            </select>
-          </div>
-
-          <div class="filter-group">
-            <span class="filter-label">Rækkefølge</span>
-            <select id="sortDirectionSelect" class="select-pill">
-              <option value="asc">Stigende</option>
-              <option value="desc">Faldende</option>
             </select>
           </div>
         </div>
@@ -815,8 +808,7 @@
     let searchQuery = '';
     let filterStatus = 'all';
     let filterArea = 'all';
-    let sortBy = 'deadline';
-    let sortDirection = 'asc';
+    let sortBy = 'deadline'; // altid stigende
 
     const collapsedGroups = {
       'not-started': false,
@@ -831,7 +823,6 @@
     const statusFilterSelect = document.getElementById('statusFilterSelect');
     const areaFilterSelect = document.getElementById('areaFilterSelect');
     const sortBySelect = document.getElementById('sortBySelect');
-    const sortDirectionSelect = document.getElementById('sortDirectionSelect');
 
     const taskModalBackdrop = document.getElementById('taskModalBackdrop');
     const taskModalTitle = document.getElementById('taskModalTitle');
@@ -954,8 +945,7 @@
       } else if (sortBy === 'status') {
         comp = getStatusOrderValue(a.status) - getStatusOrderValue(b.status);
       }
-      if (sortDirection === 'desc') comp = -comp;
-      return comp;
+      return comp; // altid stigende
     }
 
     function updateAreaFilterOptions() {
@@ -1052,9 +1042,6 @@
       }
 
       let statusOrder = ['not-started', 'in-progress', 'done'];
-      if (sortBy === 'status' && sortDirection === 'desc') {
-        statusOrder = [...statusOrder].reverse();
-      }
 
       statusOrder.forEach(statusValue => {
         const groupTasks = filtered.filter(t => t.status === statusValue);
@@ -1118,8 +1105,7 @@
             else if (!ad) comp = 1;
             else if (!bd) comp = -1;
             else comp = ad.localeCompare(bd);
-            if (sortDirection === 'desc') comp = -comp;
-            return comp;
+            return comp; // stadig stigende
           }
           return compareTasks(a, b);
         });
@@ -1339,6 +1325,7 @@
       deleteTask(currentEditTaskId);
     }
 
+    // Event listeners
     addTaskBtn.addEventListener('click', () => openTaskModal(null));
     closeTaskModalBtn.addEventListener('click', closeTaskModal);
     cancelTaskBtn.addEventListener('click', closeTaskModal);
@@ -1372,11 +1359,6 @@
 
     sortBySelect.addEventListener('change', () => {
       sortBy = sortBySelect.value;
-      renderTasks();
-    });
-
-    sortDirectionSelect.addEventListener('change', () => {
-      sortDirection = sortDirectionSelect.value;
       renderTasks();
     });
 
