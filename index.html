@@ -85,7 +85,7 @@
     }
 
     h1 {
-      display: none; /* Ingen stor overskrift */
+      display: none;
     }
 
     .card {
@@ -97,12 +97,12 @@
 
     .card-logo-wrapper {
       display: flex;
-      justify-content: center;
+      justify-content: flex-start; /* venstre */
       margin-bottom: 12px;
     }
 
     .card-logo-wrapper img {
-      height: 36px;
+      height: 48px; /* større logo */
       width: auto;
       display: block;
     }
@@ -127,6 +127,11 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
+
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
     }
 
     .command-left,
@@ -170,7 +175,7 @@
       border-radius: 999px;
       border: none;
       background: #e5ecf5;
-      color: var(--text-main);
+      color: #2d3748;
       font-size: 0.85rem;
       cursor: pointer;
       transition: background 0.1s ease;
@@ -182,13 +187,15 @@
 
     .search-input {
       position: relative;
+      min-width: 220px;
     }
 
     .search-input input {
+      width: 100%;
       padding: 7px 10px;
       border-radius: 999px;
       border: 1px solid #d0d7e2;
-      background: #f9fafb;
+      background: #ffffff;
       font-size: 0.85rem;
     }
 
@@ -203,7 +210,7 @@
       padding: 7px 9px;
       border-radius: 999px;
       border: 1px solid #d0d7e2;
-      background: #f9fafb;
+      background: #ffffff;
       font-size: 0.8rem;
       color: var(--text-main);
     }
@@ -215,11 +222,14 @@
       background: #ffffff;
     }
 
-    .select-label {
+    .filter-group {
       display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 0.78rem;
+    }
+
+    .filter-label {
       color: var(--text-muted);
     }
 
@@ -311,17 +321,9 @@
       border-radius: 999px;
     }
 
-    .group-color-not-started {
-      background: #ef4444;
-    }
-
-    .group-color-in-progress {
-      background: #eab308;
-    }
-
-    .group-color-done {
-      background: #22c55e;
-    }
+    .group-color-not-started { background: #ef4444; }
+    .group-color-in-progress { background: #eab308; }
+    .group-color-done { background: #22c55e; }
 
     .group-toggle {
       font-size: 0.9rem;
@@ -339,17 +341,9 @@
       font-weight: 600;
     }
 
-    .status-not-started {
-      background: var(--status-not-started);
-    }
-
-    .status-in-progress {
-      background: var(--status-in-progress);
-    }
-
-    .status-done {
-      background: var(--status-done);
-    }
+    .status-not-started { background: var(--status-not-started); }
+    .status-in-progress { background: var(--status-in-progress); }
+    .status-done        { background: var(--status-done); }
 
     /* Område tag */
     .area-tag {
@@ -363,7 +357,7 @@
       font-weight: 500;
     }
 
-    /* Intern kontakt avatar */
+    /* Kontakt avatar */
     .contact-cell {
       display: inline-flex;
       align-items: center;
@@ -438,7 +432,7 @@
       color: #1d4ed8;
     }
 
-    /* Modal generelt */
+    /* Modal */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -449,9 +443,7 @@
       z-index: 150;
     }
 
-    .modal-backdrop.visible {
-      display: flex;
-    }
+    .modal-backdrop.visible { display: flex; }
 
     .modal {
       background: var(--card-bg);
@@ -484,17 +476,11 @@
       padding: 4px 8px;
     }
 
-    .modal-close:hover {
-      background: #f1f5f9;
-    }
+    .modal-close:hover { background: #f1f5f9; }
 
-    .modal-body {
-      margin-top: 4px;
-    }
+    .modal-body { margin-top: 4px; }
 
-    .field-group {
-      margin-bottom: 12px;
-    }
+    .field-group { margin-bottom: 12px; }
 
     .field-group label {
       display: block;
@@ -558,9 +544,7 @@
       margin-bottom: 8px;
     }
 
-    .subtask-input-row input {
-      flex: 1;
-    }
+    .subtask-input-row input { flex: 1; }
 
     .subtasks-list {
       max-height: 180px;
@@ -585,9 +569,7 @@
       font-weight: 400;
     }
 
-    .subtask-item input[type="checkbox"] {
-      flex: 0 0 auto;
-    }
+    .subtask-item input[type="checkbox"] { flex: 0 0 auto; }
 
     .subtask-delete-btn {
       border: none;
@@ -610,18 +592,18 @@
         padding: 12px 8px 24px;
       }
 
-      .task-table-wrapper {
-        border: none;
+      .command-bar {
+        border-radius: 12px;
       }
+
+      .task-table-wrapper { border: none; }
 
       table {
         border-collapse: separate;
         border-spacing: 0 8px;
       }
 
-      thead {
-        display: none;
-      }
+      thead { display: none; }
 
       tbody tr.task-row {
         display: block;
@@ -631,9 +613,7 @@
         margin: 0 4px 8px;
       }
 
-      tbody tr.task-row:hover {
-        transform: none;
-      }
+      tbody tr.task-row:hover { transform: none; }
 
       tbody tr.task-row td {
         display: flex;
@@ -642,9 +622,7 @@
         border-bottom: 1px solid #e5e7eb;
       }
 
-      tbody tr.task-row td:last-child {
-        border-bottom: none;
-      }
+      tbody tr.task-row td:last-child { border-bottom: none; }
 
       tbody tr.task-row td::before {
         content: attr(data-label);
@@ -661,9 +639,7 @@
         text-align: right;
       }
 
-      .group-header-row td {
-        font-size: 0.8rem;
-      }
+      .group-header-row td { font-size: 0.8rem; }
     }
   </style>
 </head>
@@ -695,44 +671,44 @@
           <button type="button" id="addTaskBtn" class="button-primary">
             + Tilføj opgave
           </button>
-        </div>
-        <div class="command-right">
           <div class="search-input">
             <input type="text" id="searchInput" placeholder="Søg i opgaver...">
           </div>
+        </div>
 
-          <label class="select-label">
-            Status
+        <div class="command-right">
+          <div class="filter-group">
+            <span class="filter-label">Status</span>
             <select id="statusFilterSelect" class="select-pill">
-              <option value="all">Alle statusser</option>
+              <option value="all">Alle</option>
               <option value="not-started">Ikke begyndt</option>
               <option value="in-progress">I gang</option>
               <option value="done">Afsluttet</option>
             </select>
-          </label>
+          </div>
 
-          <label class="select-label">
-            Område
+          <div class="filter-group">
+            <span class="filter-label">Område</span>
             <select id="areaFilterSelect" class="select-pill">
               <option value="all">Alle områder</option>
             </select>
-          </label>
+          </div>
 
-          <label class="select-label">
-            Sortér efter
+          <div class="filter-group">
+            <span class="filter-label">Sortér efter</span>
             <select id="sortBySelect" class="select-pill">
               <option value="deadline">Deadline</option>
               <option value="status">Status</option>
             </select>
-          </label>
+          </div>
 
-          <label class="select-label">
-            Rækkefølge
+          <div class="filter-group">
+            <span class="filter-label">Rækkefølge</span>
             <select id="sortDirectionSelect" class="select-pill">
               <option value="asc">Stigende</option>
               <option value="desc">Faldende</option>
             </select>
-          </label>
+          </div>
         </div>
       </div>
 
@@ -750,7 +726,6 @@
             </tr>
           </thead>
           <tbody id="taskTableBody">
-            <!-- Dynamisk indhold -->
           </tbody>
         </table>
       </div>
@@ -814,7 +789,6 @@
               <button type="button" id="addSubtaskBtn" class="button-secondary">+ Tilføj</button>
             </div>
             <div id="subtasksList" class="subtasks-list">
-              <!-- Underopgaver indsættes her -->
             </div>
           </div>
         </form>
@@ -850,7 +824,6 @@
       'done': false
     };
 
-    // DOM refs
     const taskTableBody = document.getElementById('taskTableBody');
     const addTaskBtn = document.getElementById('addTaskBtn');
 
@@ -891,40 +864,28 @@
 
     function getStatusLabel(statusValue) {
       switch (statusValue) {
-        case 'not-started':
-          return 'Ikke begyndt';
-        case 'in-progress':
-          return 'I gang';
-        case 'done':
-          return 'Afsluttet';
-        default:
-          return statusValue;
+        case 'not-started': return 'Ikke begyndt';
+        case 'in-progress': return 'I gang';
+        case 'done':        return 'Afsluttet';
+        default:            return statusValue;
       }
     }
 
     function getStatusClass(statusValue) {
       switch (statusValue) {
-        case 'not-started':
-          return 'status-not-started';
-        case 'in-progress':
-          return 'status-in-progress';
-        case 'done':
-          return 'status-done';
-        default:
-          return '';
+        case 'not-started': return 'status-not-started';
+        case 'in-progress': return 'status-in-progress';
+        case 'done':        return 'status-done';
+        default:            return '';
       }
     }
 
     function getStatusOrderValue(statusValue) {
       switch (statusValue) {
-        case 'not-started':
-          return 0;
-        case 'in-progress':
-          return 1;
-        case 'done':
-          return 2;
-        default:
-          return 99;
+        case 'not-started': return 0;
+        case 'in-progress': return 1;
+        case 'done':        return 2;
+        default:            return 99;
       }
     }
 
@@ -936,7 +897,6 @@
       return (first + second) || first;
     }
 
-    // Storage
     function loadTasksFromStorage() {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
@@ -962,14 +922,12 @@
       }
     }
 
-    // Filters
     function getFilteredTasks() {
       let arr = [...tasks];
 
       if (filterStatus !== 'all') {
         arr = arr.filter(t => t.status === filterStatus);
       }
-
       if (filterArea !== 'all') {
         arr = arr.filter(t => t.area === filterArea);
       }
@@ -977,16 +935,10 @@
       const q = searchQuery.trim().toLowerCase();
       if (q) {
         arr = arr.filter(t => {
-          return [
-            t.area,
-            t.task,
-            t.internalContact,
-            t.externalContact,
-            t.notes
-          ].some(field => field && field.toLowerCase().includes(q));
+          return [t.area, t.task, t.internalContact, t.externalContact, t.notes]
+            .some(field => field && field.toLowerCase().includes(q));
         });
       }
-
       return arr;
     }
 
@@ -1002,7 +954,6 @@
       } else if (sortBy === 'status') {
         comp = getStatusOrderValue(a.status) - getStatusOrderValue(b.status);
       }
-
       if (sortDirection === 'desc') comp = -comp;
       return comp;
     }
@@ -1029,7 +980,6 @@
       }
     }
 
-    // Subtasks rendering in modal
     function renderSubtasksList() {
       subtasksList.innerHTML = '';
       if (!currentSubtasks.length) {
@@ -1040,7 +990,6 @@
         subtasksList.appendChild(empty);
         return;
       }
-
       currentSubtasks.forEach((subtask, index) => {
         const item = document.createElement('div');
         item.className = 'subtask-item';
@@ -1085,10 +1034,8 @@
       subtaskInput.focus();
     }
 
-    // Rendering tasks in table
     function renderTasks() {
       taskTableBody.innerHTML = '';
-
       const filtered = getFilteredTasks();
 
       if (filtered.length === 0) {
@@ -1113,7 +1060,6 @@
         const groupTasks = filtered.filter(t => t.status === statusValue);
         if (groupTasks.length === 0) return;
 
-        // Gruppens header
         const headerRow = document.createElement('tr');
         headerRow.className = 'group-header-row';
         const headerTd = document.createElement('td');
@@ -1126,7 +1072,8 @@
         leftDiv.className = 'group-header-left';
 
         const colorBar = document.createElement('div');
-        colorBar.className = 'group-color-bar ' +
+        colorBar.className =
+          'group-color-bar ' +
           (statusValue === 'not-started'
             ? 'group-color-not-started'
             : statusValue === 'in-progress'
@@ -1160,11 +1107,8 @@
           renderTasks();
         });
 
-        if (collapsedGroups[statusValue]) {
-          return;
-        }
+        if (collapsedGroups[statusValue]) return;
 
-        // Sortér opgaver i gruppen
         const sortedGroup = [...groupTasks].sort((a, b) => {
           if (sortBy === 'status') {
             const ad = a.deadline || '';
@@ -1288,7 +1232,6 @@
       });
     }
 
-    // Modal
     function openTaskModal(taskId = null) {
       currentEditTaskId = taskId;
 
@@ -1387,9 +1330,7 @@
       tasks = tasks.filter(t => t.id !== taskId);
       saveTasksToStorage();
       updateAreaFilterOptions();
-      if (currentEditTaskId === taskId) {
-        closeTaskModal();
-      }
+      if (currentEditTaskId === taskId) closeTaskModal();
       renderTasks();
     }
 
@@ -1398,7 +1339,6 @@
       deleteTask(currentEditTaskId);
     }
 
-    // Event listeners
     addTaskBtn.addEventListener('click', () => openTaskModal(null));
     closeTaskModalBtn.addEventListener('click', closeTaskModal);
     cancelTaskBtn.addEventListener('click', closeTaskModal);
@@ -1406,9 +1346,7 @@
     deleteTaskBtn.addEventListener('click', deleteCurrentTask);
 
     taskModalBackdrop.addEventListener('click', (event) => {
-      if (event.target === taskModalBackdrop) {
-        closeTaskModal();
-      }
+      if (event.target === taskModalBackdrop) closeTaskModal();
     });
 
     document.addEventListener('keydown', (event) => {
@@ -1450,7 +1388,6 @@
       }
     });
 
-    // Initial load
     loadTasksFromStorage();
     updateAreaFilterOptions();
     renderTasks();
