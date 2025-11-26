@@ -10,9 +10,9 @@
       --card-bg: #ffffff;
       --border-radius: 14px;
       --shadow: 0 6px 18px rgba(0,0,0,0.06);
-      --accent: #2b6cb0;
+      --accent: #2563eb;
       --accent-soft: #e3f2ff;
-      --text-main: #1f2933;
+      --text-main: #111827;
       --text-muted: #6b7280;
 
       --status-not-started: #ffe1e1; /* lys rød */
@@ -20,34 +20,93 @@
       --status-done: #dcf7e2;        /* lys grøn */
     }
 
-* {
-  box-sizing: border-box;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
 
     body {
       margin: 0;
-      padding: 24px;
+      padding: 0;
       background: var(--bg);
       color: var(--text-main);
     }
 
-    .container {
+    .page {
       max-width: 1200px;
       margin: 0 auto;
+      padding: 16px 24px 32px;
+    }
+
+    /* Topbar */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 24px;
+      border-bottom: 1px solid #e5e7eb;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+      position: sticky;
+      top: 0;
+      background: #ffffff;
+      z-index: 100;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .topbar-logo {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #2563eb, #14b8a6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .topbar-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .topbar-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #374151;
     }
 
     h1 {
-      margin-top: 0;
-      margin-bottom: 16px;
-      font-size: 2rem;
+      margin: 18px 0 16px;
+      font-size: 1.5rem;
     }
 
     .card {
       background: var(--card-bg);
       border-radius: var(--border-radius);
       box-shadow: var(--shadow);
-      padding: 20px 22px;
+      padding: 18px 20px 18px;
     }
 
     .card-header {
@@ -58,45 +117,26 @@
     }
 
     .card-title {
-      font-size: 1.2rem;
+      font-size: 1.05rem;
       font-weight: 600;
     }
 
-    .controls-row {
+    /* Command bar */
+    .command-bar {
       display: flex;
-      justify-content: flex-end;
-      margin-bottom: 10px;
-      gap: 16px;
       flex-wrap: wrap;
-    }
-
-    .sort-group {
-      display: flex;
-      gap: 12px;
+      gap: 10px;
+      justify-content: space-between;
       align-items: center;
-      font-size: 0.9rem;
-      color: var(--text-muted);
+      margin-bottom: 10px;
     }
 
-    .sort-group label {
+    .command-left,
+    .command-right {
       display: flex;
       align-items: center;
-      gap: 6px;
-    }
-
-    .sort-group select {
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid #d0d7e2;
-      background: #f9fafb;
-      font-size: 0.9rem;
-    }
-
-    .sort-group select:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--accent-soft);
-      background: #ffffff;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .button-primary {
@@ -104,36 +144,36 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      padding: 10px 16px;
+      padding: 8px 14px;
       border-radius: 999px;
       border: none;
       background: var(--accent);
       color: #ffffff;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+      box-shadow: 0 3px 10px rgba(37, 99, 235, 0.4);
       transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
     }
 
     .button-primary:hover {
       transform: translateY(-1px);
-      background: #245aa0;
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
+      background: #1d4ed8;
+      box-shadow: 0 5px 14px rgba(37, 99, 235, 0.5);
     }
 
     .button-primary:active {
       transform: translateY(0);
-      box-shadow: 0 3px 8px rgba(37, 99, 235, 0.35);
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
     }
 
     .button-secondary {
-      padding: 8px 14px;
+      padding: 7px 12px;
       border-radius: 999px;
       border: none;
       background: #e5ecf5;
       color: var(--text-main);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       cursor: pointer;
       transition: background 0.1s ease;
     }
@@ -142,10 +182,65 @@
       background: #d6e2f2;
     }
 
+    .search-input {
+      position: relative;
+    }
+
+    .search-input input {
+      padding: 7px 28px 7px 24px;
+      border-radius: 999px;
+      border: 1px solid #d0d7e2;
+      background: #f9fafb;
+      font-size: 0.85rem;
+    }
+
+    .search-input input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+      background: #ffffff;
+    }
+
+    .search-input::before {
+      content: "🔍";
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    .select-pill {
+      padding: 7px 9px;
+      border-radius: 999px;
+      border: 1px solid #d0d7e2;
+      background: #f9fafb;
+      font-size: 0.8rem;
+      color: var(--text-main);
+    }
+
+    .select-pill:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+      background: #ffffff;
+    }
+
+    .select-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Tabel */
     .task-table-wrapper {
-      max-height: 75vh;
+      max-height: 78vh;
       overflow: auto;
       border-radius: var(--border-radius);
+      border: 1px solid #e5e7eb;
     }
 
     table {
@@ -160,12 +255,17 @@
       top: 0;
       background: rgba(211, 211, 211, 0.4); /* lys grå, 40% transparens */
       z-index: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      font-size: 0.75rem;
+      color: #4b5563;
     }
 
     th, td {
-      padding: 12px 10px;
+      padding: 10px 10px;
       text-align: left;
       border-bottom: 1px solid #e3e8f0;
+      vertical-align: middle;
     }
 
     th:first-child {
@@ -176,28 +276,78 @@
       border-top-right-radius: var(--border-radius);
     }
 
-    tbody tr {
+    tbody tr.task-row {
       background: #ffffff;
       transition: background 0.1s ease, transform 0.05s ease;
       cursor: pointer;
     }
 
-    tbody tr:nth-child(even) {
+    tbody tr.task-row:nth-child(even) {
       background: #f9fbff;
     }
 
-    tbody tr:hover {
+    tbody tr.task-row:hover {
       background: #eef4ff;
       transform: translateY(-1px);
     }
 
+    .text-muted {
+      color: var(--text-muted);
+    }
+
+    /* Status grupper */
+    .group-header-row td {
+      background: #f9fafb;
+      font-weight: 600;
+      font-size: 0.83rem;
+      color: #374151;
+      border-bottom-color: #e5e7eb;
+      cursor: pointer;
+    }
+
+    .group-header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .group-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .group-color-bar {
+      width: 4px;
+      height: 16px;
+      border-radius: 999px;
+    }
+
+    .group-color-not-started {
+      background: #ef4444;
+    }
+
+    .group-color-in-progress {
+      background: #eab308;
+    }
+
+    .group-color-done {
+      background: #22c55e;
+    }
+
+    .group-toggle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Status pill */
     .status-pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       padding: 4px 10px;
       border-radius: 999px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
     }
 
@@ -213,8 +363,78 @@
       background: var(--status-done);
     }
 
-    .text-muted {
-      color: var(--text-muted);
+    /* Område tag */
+    .area-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      background: #e0f2fe;
+      color: #075985;
+      font-weight: 500;
+    }
+
+    /* Avatar til intern kontakt */
+    .contact-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    /* Noterindikator */
+    .notes-indicator {
+      font-size: 0.8rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #e5ecf5;
+      color: #374151;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .notes-indicator.has-notes {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    /* Handlinger */
+    .action-buttons {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-button {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .icon-button:hover {
+      background: #e5e7eb;
+    }
+
+    .icon-delete:hover {
+      background: #fee2e2;
+      color: #b91c1c;
     }
 
     /* Modal generelt */
@@ -225,7 +445,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 50;
+      z-index: 150;
     }
 
     .modal-backdrop.visible {
@@ -288,7 +508,7 @@
     select,
     textarea {
       width: 100%;
-      padding: 10px 12px;
+      padding: 9px 11px;
       font-size: 0.95rem;
       border-radius: 10px;
       border: 1px solid #d0d7e2;
@@ -331,47 +551,129 @@
       margin-top: 4px;
     }
 
-    @media (max-width: 700px) {
-      body {
-        padding: 12px;
+    /* Mobile / kort-visning */
+    @media (max-width: 800px) {
+      .page {
+        padding: 12px 12px 24px;
       }
 
-      .modal {
-        max-width: 95%;
+      .task-table-wrapper {
+        border: none;
       }
 
-      .controls-row {
-        justify-content: flex-start;
+      table {
+        border-collapse: separate;
+        border-spacing: 0 8px;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tbody tr.task-row {
+        display: block;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(15,23,42,0.06);
+        margin: 0 4px 8px;
+      }
+
+      tbody tr.task-row:hover {
+        transform: none;
+      }
+
+      tbody tr.task-row td {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      tbody tr.task-row td:last-child {
+        border-bottom: none;
+      }
+
+      tbody tr.task-row td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-muted);
+        margin-right: 8px;
+        font-size: 0.78rem;
+        flex: 0 0 40%;
+        max-width: 40%;
+      }
+
+      tbody tr.task-row td > *:not(span[data-label]) {
+        flex: 1;
+        text-align: right;
+      }
+
+      .group-header-row td {
+        font-size: 0.8rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">O</div>
+      <div class="topbar-title">Opgavestyring</div>
+    </div>
+    <div class="topbar-right">
+      <span>Min arbejdsflade</span>
+      <div class="topbar-avatar">ME</div>
+    </div>
+  </header>
+
+  <div class="page">
     <h1>Opgaveoversigt</h1>
 
     <section class="card">
       <div class="card-header">
         <div class="card-title">Aktuelle opgaver</div>
-        <button type="button" id="addTaskBtn" class="button-primary">
-          + Tilføj opgave
-        </button>
       </div>
 
-      <div class="controls-row">
-        <div class="sort-group">
-          <label for="sortBySelect">
+      <div class="command-bar">
+        <div class="command-left">
+          <button type="button" id="addTaskBtn" class="button-primary">
+            + Tilføj opgave
+          </button>
+        </div>
+        <div class="command-right">
+          <div class="search-input">
+            <input type="text" id="searchInput" placeholder="Søg i opgaver...">
+          </div>
+
+          <label class="select-label">
+            Status
+            <select id="statusFilterSelect" class="select-pill">
+              <option value="all">Alle statusser</option>
+              <option value="not-started">Ikke begyndt</option>
+              <option value="in-progress">I gang</option>
+              <option value="done">Afsluttet</option>
+            </select>
+          </label>
+
+          <label class="select-label">
+            Område
+            <select id="areaFilterSelect" class="select-pill">
+              <option value="all">Alle områder</option>
+            </select>
+          </label>
+
+          <label class="select-label">
             Sortér efter
-            <select id="sortBySelect">
+            <select id="sortBySelect" class="select-pill">
               <option value="deadline">Deadline</option>
               <option value="status">Status</option>
               <option value="lastModified">Sidst ændret</option>
             </select>
           </label>
 
-          <label for="sortDirectionSelect">
+          <label class="select-label">
             Rækkefølge
-            <select id="sortDirectionSelect">
+            <select id="sortDirectionSelect" class="select-pill">
               <option value="asc">Stigende</option>
               <option value="desc">Faldende</option>
             </select>
@@ -391,6 +693,7 @@
               <th>Status</th>
               <th>Sidst ændret</th>
               <th>Noter</th>
+              <th>Handlinger</th>
             </tr>
           </thead>
           <tbody id="taskTableBody">
@@ -467,16 +770,30 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'opgaveoversigt_tasks_v1';
+    const STORAGE_KEY = 'opgaveoversigt_tasks_v2';
 
     let tasks = [];
     let currentEditTaskId = null;
+
+    let searchQuery = '';
+    let filterStatus = 'all';
+    let filterArea = 'all';
     let sortBy = 'deadline';
     let sortDirection = 'asc';
 
+    const collapsedGroups = {
+      'not-started': false,
+      'in-progress': false,
+      'done': false
+    };
+
+    // DOM refs
     const taskTableBody = document.getElementById('taskTableBody');
     const addTaskBtn = document.getElementById('addTaskBtn');
 
+    const searchInput = document.getElementById('searchInput');
+    const statusFilterSelect = document.getElementById('statusFilterSelect');
+    const areaFilterSelect = document.getElementById('areaFilterSelect');
     const sortBySelect = document.getElementById('sortBySelect');
     const sortDirectionSelect = document.getElementById('sortDirectionSelect');
 
@@ -559,6 +876,15 @@
       }
     }
 
+    function getInitials(name) {
+      if (!name) return '';
+      const parts = name.trim().split(/\s+/);
+      const first = parts[0] ? parts[0][0].toUpperCase() : '';
+      const second = parts.length > 1 ? parts[1][0].toUpperCase() : '';
+      return (first + second) || first;
+    }
+
+    // Storage
     function loadTasksFromStorage() {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
@@ -585,95 +911,298 @@
       }
     }
 
-    function getSortedTasks() {
-      const arr = [...tasks];
-      arr.sort((a, b) => {
-        let comp = 0;
+    // Filters
+    function getFilteredTasks() {
+      let arr = [...tasks];
 
-        if (sortBy === 'deadline') {
-          const ad = a.deadline || '';
-          const bd = b.deadline || '';
-          if (ad === bd) comp = 0;
-          else if (!ad) comp = 1;
-          else if (!bd) comp = -1;
-          else comp = ad.localeCompare(bd);
-        } else if (sortBy === 'status') {
-          comp = getStatusOrderValue(a.status) - getStatusOrderValue(b.status);
-        } else if (sortBy === 'lastModified') {
-          comp = (a.lastModified || 0) - (b.lastModified || 0);
-        }
+      if (filterStatus !== 'all') {
+        arr = arr.filter(t => t.status === filterStatus);
+      }
 
-        return sortDirection === 'asc' ? comp : -comp;
-      });
+      if (filterArea !== 'all') {
+        arr = arr.filter(t => t.area === filterArea);
+      }
+
+      const q = searchQuery.trim().toLowerCase();
+      if (q) {
+        arr = arr.filter(t => {
+          return [
+            t.area,
+            t.task,
+            t.internalContact,
+            t.externalContact,
+            t.notes
+          ].some(field => field && field.toLowerCase().includes(q));
+        });
+      }
 
       return arr;
     }
 
+    function compareTasks(a, b) {
+      let comp = 0;
+      if (sortBy === 'deadline') {
+        const ad = a.deadline || '';
+        const bd = b.deadline || '';
+        if (ad === bd) comp = 0;
+        else if (!ad) comp = 1;
+        else if (!bd) comp = -1;
+        else comp = ad.localeCompare(bd);
+      } else if (sortBy === 'status') {
+        comp = getStatusOrderValue(a.status) - getStatusOrderValue(b.status);
+      } else if (sortBy === 'lastModified') {
+        comp = (a.lastModified || 0) - (b.lastModified || 0);
+      }
+
+      if (sortDirection === 'desc') comp = -comp;
+      return comp;
+    }
+
+    function updateAreaFilterOptions() {
+      const previous = areaFilterSelect.value;
+      const areas = [...new Set(tasks.map(t => t.area).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+      areaFilterSelect.innerHTML = '';
+      const allOpt = document.createElement('option');
+      allOpt.value = 'all';
+      allOpt.textContent = 'Alle områder';
+      areaFilterSelect.appendChild(allOpt);
+      areas.forEach(area => {
+        const opt = document.createElement('option');
+        opt.value = area;
+        opt.textContent = area;
+        areaFilterSelect.appendChild(opt);
+      });
+      if (areas.includes(previous)) {
+        areaFilterSelect.value = previous;
+      } else {
+        areaFilterSelect.value = 'all';
+        filterArea = 'all';
+      }
+    }
+
+    // Rendering
     function renderTasks() {
       taskTableBody.innerHTML = '';
 
-      const sortedTasks = getSortedTasks();
+      const filtered = getFilteredTasks();
 
-      if (sortedTasks.length === 0) {
+      if (filtered.length === 0) {
         const emptyRow = document.createElement('tr');
         const td = document.createElement('td');
-        td.colSpan = 8;
+        td.colSpan = 9;
         td.className = 'text-muted';
         td.style.textAlign = 'center';
         td.style.padding = '20px';
-        td.textContent = 'Ingen opgaver endnu. Klik på "Tilføj opgave" for at komme i gang.';
+        td.textContent = 'Ingen opgaver matcher dine filtre. Klik på "Tilføj opgave" for at oprette en ny.';
         emptyRow.appendChild(td);
         taskTableBody.appendChild(emptyRow);
         return;
       }
 
-      sortedTasks.forEach(task => {
-        const row = document.createElement('tr');
+      let statusOrder = ['not-started', 'in-progress', 'done'];
+      if (sortBy === 'status' && sortDirection === 'desc') {
+        statusOrder = [...statusOrder].reverse();
+      }
 
-        const areaTd = document.createElement('td');
-        areaTd.textContent = task.area;
-        row.appendChild(areaTd);
+      statusOrder.forEach(statusValue => {
+        const groupTasks = filtered.filter(t => t.status === statusValue);
+        if (groupTasks.length === 0) return;
 
-        const taskTd = document.createElement('td');
-        taskTd.textContent = task.task;
-        row.appendChild(taskTd);
+        // Gruppens header
+        const headerRow = document.createElement('tr');
+        headerRow.className = 'group-header-row';
+        const headerTd = document.createElement('td');
+        headerTd.colSpan = 9;
 
-        const internalTd = document.createElement('td');
-        internalTd.textContent = task.internalContact;
-        row.appendChild(internalTd);
+        const headerContent = document.createElement('div');
+        headerContent.className = 'group-header-content';
 
-        const externalTd = document.createElement('td');
-        externalTd.textContent = task.externalContact || '–';
-        row.appendChild(externalTd);
+        const leftDiv = document.createElement('div');
+        leftDiv.className = 'group-header-left';
 
-        const deadlineTd = document.createElement('td');
-        deadlineTd.textContent = formatDate(task.deadline);
-        row.appendChild(deadlineTd);
+        const colorBar = document.createElement('div');
+        colorBar.className = 'group-color-bar ' +
+          (statusValue === 'not-started'
+            ? 'group-color-not-started'
+            : statusValue === 'in-progress'
+            ? 'group-color-in-progress'
+            : 'group-color-done');
 
-        const statusTd = document.createElement('td');
-        const statusSpan = document.createElement('span');
-        statusSpan.className = 'status-pill ' + getStatusClass(task.status);
-        statusSpan.textContent = getStatusLabel(task.status);
-        statusTd.appendChild(statusSpan);
-        row.appendChild(statusTd);
+        const labelSpan = document.createElement('span');
+        labelSpan.textContent = getStatusLabel(statusValue);
 
-        const lastModTd = document.createElement('td');
-        lastModTd.textContent = formatDateTimeFromTimestamp(task.lastModified);
-        row.appendChild(lastModTd);
+        const countSpan = document.createElement('span');
+        countSpan.className = 'text-muted';
+        countSpan.textContent = `(${groupTasks.length})`;
 
-        const notesTd = document.createElement('td');
-        notesTd.textContent = task.notes && task.notes.trim() ? 'Tilføjet' : '–';
-        row.appendChild(notesTd);
+        leftDiv.appendChild(colorBar);
+        leftDiv.appendChild(labelSpan);
+        leftDiv.appendChild(countSpan);
 
-        row.addEventListener('click', () => {
-          openTaskModal(task.id);
+        const toggleSpan = document.createElement('span');
+        toggleSpan.className = 'group-toggle';
+        toggleSpan.textContent = collapsedGroups[statusValue] ? '▸ Vis' : '▾ Skjul';
+
+        headerContent.appendChild(leftDiv);
+        headerContent.appendChild(toggleSpan);
+
+        headerTd.appendChild(headerContent);
+        headerRow.appendChild(headerTd);
+        taskTableBody.appendChild(headerRow);
+
+        headerRow.addEventListener('click', () => {
+          collapsedGroups[statusValue] = !collapsedGroups[statusValue];
+          renderTasks();
         });
 
-        taskTableBody.appendChild(row);
+        if (collapsedGroups[statusValue]) {
+          return;
+        }
+
+        // Sortér opgaver i gruppen
+        const sortedGroup = [...groupTasks].sort((a, b) => {
+          if (sortBy === 'status') {
+            // Sekundært sorterer vi på deadline, hvis status er valgt
+            const ad = a.deadline || '';
+            const bd = b.deadline || '';
+            let comp = 0;
+            if (ad === bd) comp = 0;
+            else if (!ad) comp = 1;
+            else if (!bd) comp = -1;
+            else comp = ad.localeCompare(bd);
+            if (sortDirection === 'desc') comp = -comp;
+            return comp;
+          }
+          return compareTasks(a, b);
+        });
+
+        sortedGroup.forEach(task => {
+          const row = document.createElement('tr');
+          row.className = 'task-row';
+
+          // Område
+          const areaTd = document.createElement('td');
+          areaTd.dataset.label = 'Område';
+          const areaSpan = document.createElement('span');
+          areaSpan.className = 'area-tag';
+          areaSpan.textContent = task.area;
+          areaTd.appendChild(areaSpan);
+          row.appendChild(areaTd);
+
+          // Opgave
+          const taskTd = document.createElement('td');
+          taskTd.dataset.label = 'Opgave';
+          taskTd.textContent = task.task;
+          row.appendChild(taskTd);
+
+          // Intern kontakt
+          const internalTd = document.createElement('td');
+          internalTd.dataset.label = 'Kontakt (intern)';
+          const contactDiv = document.createElement('div');
+          contactDiv.className = 'contact-cell';
+          const avatar = document.createElement('div');
+          avatar.className = 'avatar';
+          avatar.textContent = getInitials(task.internalContact);
+          const nameSpan = document.createElement('span');
+          nameSpan.textContent = task.internalContact;
+          contactDiv.appendChild(avatar);
+          contactDiv.appendChild(nameSpan);
+          internalTd.appendChild(contactDiv);
+          row.appendChild(internalTd);
+
+          // Ekstern kontakt
+          const externalTd = document.createElement('td');
+          externalTd.dataset.label = 'Kontakt (ekstern)';
+          externalTd.textContent = task.externalContact || '–';
+          row.appendChild(externalTd);
+
+          // Deadline
+          const deadlineTd = document.createElement('td');
+          deadlineTd.dataset.label = 'Deadline';
+          deadlineTd.textContent = formatDate(task.deadline);
+          row.appendChild(deadlineTd);
+
+          // Status
+          const statusTd = document.createElement('td');
+          statusTd.dataset.label = 'Status';
+          const statusSpan = document.createElement('span');
+          statusSpan.className = 'status-pill ' + getStatusClass(task.status);
+          statusSpan.textContent = getStatusLabel(task.status);
+          statusTd.appendChild(statusSpan);
+          row.appendChild(statusTd);
+
+          // Sidst ændret
+          const lastModTd = document.createElement('td');
+          lastModTd.dataset.label = 'Sidst ændret';
+          lastModTd.textContent = formatDateTimeFromTimestamp(task.lastModified);
+          row.appendChild(lastModTd);
+
+          // Noter
+          const notesTd = document.createElement('td');
+          notesTd.dataset.label = 'Noter';
+          const notesBadge = document.createElement('span');
+          notesBadge.className = 'notes-indicator' + (task.notes && task.notes.trim() ? ' has-notes' : '');
+          notesBadge.innerHTML = task.notes && task.notes.trim()
+            ? '📝 Noter'
+            : '–';
+          notesTd.appendChild(notesBadge);
+          row.appendChild(notesTd);
+
+          // Handlinger
+          const actionsTd = document.createElement('td');
+          actionsTd.dataset.label = 'Handlinger';
+          const actionsDiv = document.createElement('div');
+          actionsDiv.className = 'action-buttons';
+
+          const editBtn = document.createElement('button');
+          editBtn.type = 'button';
+          editBtn.className = 'icon-button';
+          editBtn.title = 'Redigér opgave';
+          editBtn.textContent = '✏️';
+
+          editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openTaskModal(task.id);
+          });
+
+          const notesBtn = document.createElement('button');
+          notesBtn.type = 'button';
+          notesBtn.className = 'icon-button';
+          notesBtn.title = 'Redigér noter';
+          notesBtn.textContent = '📝';
+          notesBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openTaskModal(task.id, { focusField: 'notes' });
+          });
+
+          const deleteBtn = document.createElement('button');
+          deleteBtn.type = 'button';
+          deleteBtn.className = 'icon-button icon-delete';
+          deleteBtn.title = 'Slet opgave';
+          deleteBtn.textContent = '🗑️';
+          deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteTask(task.id);
+          });
+
+          actionsDiv.appendChild(editBtn);
+          actionsDiv.appendChild(notesBtn);
+          actionsDiv.appendChild(deleteBtn);
+          actionsTd.appendChild(actionsDiv);
+          row.appendChild(actionsTd);
+
+          row.addEventListener('click', () => {
+            openTaskModal(task.id);
+          });
+
+          taskTableBody.appendChild(row);
+        });
       });
     }
 
-    function openTaskModal(taskId = null) {
+    // Modal
+    function openTaskModal(taskId = null, options = {}) {
+      const focusField = options.focusField || 'area';
       currentEditTaskId = taskId;
 
       if (taskId) {
@@ -707,7 +1236,11 @@
       }
 
       taskModalBackdrop.classList.add('visible');
-      modalArea.focus();
+      if (focusField === 'notes') {
+        modalNotes.focus();
+      } else {
+        modalArea.focus();
+      }
     }
 
     function closeTaskModal() {
@@ -758,19 +1291,27 @@
       }
 
       saveTasksToStorage();
+      updateAreaFilterOptions();
       closeTaskModal();
+      renderTasks();
+    }
+
+    function deleteTask(taskId) {
+      const confirmed = confirm('Er du sikker på, at du vil slette denne opgave?');
+      if (!confirmed) return;
+
+      tasks = tasks.filter(t => t.id !== taskId);
+      saveTasksToStorage();
+      updateAreaFilterOptions();
+      if (currentEditTaskId === taskId) {
+        closeTaskModal();
+      }
       renderTasks();
     }
 
     function deleteCurrentTask() {
       if (!currentEditTaskId) return;
-      const confirmed = confirm('Er du sikker på, at du vil slette denne opgave?');
-      if (!confirmed) return;
-
-      tasks = tasks.filter(t => t.id !== currentEditTaskId);
-      saveTasksToStorage();
-      closeTaskModal();
-      renderTasks();
+      deleteTask(currentEditTaskId);
     }
 
     // Event listeners
@@ -792,6 +1333,21 @@
       }
     });
 
+    searchInput.addEventListener('input', () => {
+      searchQuery = searchInput.value;
+      renderTasks();
+    });
+
+    statusFilterSelect.addEventListener('change', () => {
+      filterStatus = statusFilterSelect.value;
+      renderTasks();
+    });
+
+    areaFilterSelect.addEventListener('change', () => {
+      filterArea = areaFilterSelect.value;
+      renderTasks();
+    });
+
     sortBySelect.addEventListener('change', () => {
       sortBy = sortBySelect.value;
       renderTasks();
@@ -804,6 +1360,7 @@
 
     // Initial load
     loadTasksFromStorage();
+    updateAreaFilterOptions();
     renderTasks();
   </script>
 </body>
