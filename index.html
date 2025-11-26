@@ -33,7 +33,7 @@
     }
 
     .page {
-      width: min(96vw, 1600px);  /* gør layoutet markant bredere */
+      width: min(96vw, 1600px);
       margin: 0 auto;
       padding: 16px 16px 32px;
     }
@@ -56,12 +56,6 @@
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-
-    .topbar-logo-img {
-      height: 28px;
-      width: auto;
-      display: block;
     }
 
     .topbar-title {
@@ -91,7 +85,7 @@
     }
 
     h1 {
-      display: none; /* overskriften bruges ikke visuelt */
+      display: none; /* Ingen stor overskrift */
     }
 
     .card {
@@ -99,6 +93,18 @@
       border-radius: var(--border-radius);
       box-shadow: var(--shadow);
       padding: 18px 20px 18px;
+    }
+
+    .card-logo-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .card-logo-wrapper img {
+      height: 36px;
+      width: auto;
+      display: block;
     }
 
     .card-header {
@@ -235,7 +241,7 @@
     thead {
       position: sticky;
       top: 0;
-      background: rgba(211, 211, 211, 0.4); /* lys grå, 40% transparens */
+      background: rgba(211, 211, 211, 0.4);
       z-index: 1;
       text-transform: uppercase;
       letter-spacing: 0.03em;
@@ -357,7 +363,7 @@
       font-weight: 500;
     }
 
-    /* Avatar til intern kontakt */
+    /* Intern kontakt avatar */
     .contact-cell {
       display: inline-flex;
       align-items: center;
@@ -377,7 +383,41 @@
       color: #374151;
     }
 
-    /* Noterindikator */
+    /* Opgave + underopgaver */
+    .task-title {
+      font-weight: 500;
+    }
+
+    .subtasks-meta {
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .subtasks-count {
+      white-space: nowrap;
+    }
+
+    .subtasks-progress {
+      flex: 1;
+      height: 4px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+    }
+
+    .subtasks-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: #22c55e;
+      width: 0;
+      transition: width 0.15s ease;
+    }
+
+    /* Noter-indikator */
     .notes-indicator {
       font-size: 0.8rem;
       padding: 3px 8px;
@@ -417,7 +457,7 @@
       background: var(--card-bg);
       border-radius: 18px;
       box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
-      max-width: 560px;
+      max-width: 600px;
       width: 100%;
       padding: 20px 22px 18px;
     }
@@ -506,13 +546,64 @@
       gap: 8px;
     }
 
-    .last-modified {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 4px;
+    .subtasks-section-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 4px;
     }
 
-    /* Mobile / kort-visning */
+    .subtask-input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .subtask-input-row input {
+      flex: 1;
+    }
+
+    .subtasks-list {
+      max-height: 180px;
+      overflow-y: auto;
+      border-radius: 8px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      padding: 6px 8px;
+    }
+
+    .subtask-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 2px;
+      font-size: 0.9rem;
+    }
+
+    .subtask-item label {
+      margin: 0;
+      flex: 1;
+      font-weight: 400;
+    }
+
+    .subtask-item input[type="checkbox"] {
+      flex: 0 0 auto;
+    }
+
+    .subtask-delete-btn {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
+
+    .subtask-delete-btn:hover {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
     @media (max-width: 800px) {
       .page {
         width: 100%;
@@ -579,7 +670,6 @@
 <body>
   <header class="topbar">
     <div class="topbar-left">
-      <img src="logo.png" alt="Logo" class="topbar-logo-img">
       <div class="topbar-title">Opgavestyring</div>
     </div>
     <div class="topbar-right">
@@ -592,6 +682,10 @@
     <h1>Opgaveoversigt</h1>
 
     <section class="card">
+      <div class="card-logo-wrapper">
+        <img src="logo.png" alt="Logo">
+      </div>
+
       <div class="card-header">
         <div class="card-title">Aktuelle opgaver</div>
       </div>
@@ -629,7 +723,6 @@
             <select id="sortBySelect" class="select-pill">
               <option value="deadline">Deadline</option>
               <option value="status">Status</option>
-              <option value="lastModified">Sidst ændret</option>
             </select>
           </label>
 
@@ -654,11 +747,10 @@
               <th>Kontakt (ekstern)</th>
               <th>Deadline</th>
               <th>Noter</th>
-              <th>Sidst ændret</th>
             </tr>
           </thead>
           <tbody id="taskTableBody">
-            <!-- Rækker indsættes dynamisk -->
+            <!-- Dynamisk indhold -->
           </tbody>
         </table>
       </div>
@@ -715,7 +807,16 @@
             <textarea id="modalNotes" placeholder="Tilføj noter til opgaven her..."></textarea>
           </div>
 
-          <div class="last-modified" id="modalLastModified" style="display:none;"></div>
+          <div class="field-group">
+            <div class="subtasks-section-title">Underopgaver</div>
+            <div class="subtask-input-row">
+              <input type="text" id="subtaskInput" placeholder="Skriv en underopgave...">
+              <button type="button" id="addSubtaskBtn" class="button-secondary">+ Tilføj</button>
+            </div>
+            <div id="subtasksList" class="subtasks-list">
+              <!-- Underopgaver indsættes her -->
+            </div>
+          </div>
         </form>
       </div>
       <div class="modal-footer">
@@ -735,6 +836,7 @@
 
     let tasks = [];
     let currentEditTaskId = null;
+    let currentSubtasks = [];
 
     let searchQuery = '';
     let filterStatus = 'all';
@@ -764,7 +866,6 @@
     const cancelTaskBtn = document.getElementById('cancelTaskBtn');
     const saveTaskBtn = document.getElementById('saveTaskBtn');
     const deleteTaskBtn = document.getElementById('deleteTaskBtn');
-    const modalLastModified = document.getElementById('modalLastModified');
 
     const modalArea = document.getElementById('modalArea');
     const modalTask = document.getElementById('modalTask');
@@ -774,20 +875,14 @@
     const modalStatus = document.getElementById('modalStatus');
     const modalNotes = document.getElementById('modalNotes');
 
+    const subtaskInput = document.getElementById('subtaskInput');
+    const addSubtaskBtn = document.getElementById('addSubtaskBtn');
+    const subtasksList = document.getElementById('subtasksList');
+
     function formatShortDate(dateStr) {
       if (!dateStr) return '';
       const date = new Date(dateStr);
       if (isNaN(date.getTime())) return dateStr;
-      const d = date.getDate();
-      const m = date.getMonth() + 1;
-      const y = date.getFullYear() % 100;
-      return `${d}-${m}-${y.toString().padStart(2, '0')}`;
-    }
-
-    function formatShortDateFromTimestamp(ts) {
-      if (!ts) return '';
-      const date = new Date(ts);
-      if (isNaN(date.getTime())) return '';
       const d = date.getDate();
       const m = date.getMonth() + 1;
       const y = date.getFullYear() % 100;
@@ -849,9 +944,8 @@
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) {
           tasks = parsed.map(t => {
-            if (typeof t.lastModified !== 'number') {
-              t.lastModified = Date.now();
-            }
+            if (!Array.isArray(t.subtasks)) t.subtasks = [];
+            if (typeof t.lastModified !== 'number') t.lastModified = Date.now();
             return t;
           });
         }
@@ -907,8 +1001,6 @@
         else comp = ad.localeCompare(bd);
       } else if (sortBy === 'status') {
         comp = getStatusOrderValue(a.status) - getStatusOrderValue(b.status);
-      } else if (sortBy === 'lastModified') {
-        comp = (a.lastModified || 0) - (b.lastModified || 0);
       }
 
       if (sortDirection === 'desc') comp = -comp;
@@ -937,7 +1029,63 @@
       }
     }
 
-    // Rendering
+    // Subtasks rendering in modal
+    function renderSubtasksList() {
+      subtasksList.innerHTML = '';
+      if (!currentSubtasks.length) {
+        const empty = document.createElement('div');
+        empty.className = 'text-muted';
+        empty.style.fontSize = '0.82rem';
+        empty.textContent = 'Ingen underopgaver endnu.';
+        subtasksList.appendChild(empty);
+        return;
+      }
+
+      currentSubtasks.forEach((subtask, index) => {
+        const item = document.createElement('div');
+        item.className = 'subtask-item';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = !!subtask.done;
+        checkbox.addEventListener('change', () => {
+          currentSubtasks[index].done = checkbox.checked;
+        });
+
+        const label = document.createElement('label');
+        label.textContent = subtask.title;
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'subtask-delete-btn';
+        delBtn.textContent = '✕';
+        delBtn.title = 'Slet underopgave';
+        delBtn.addEventListener('click', () => {
+          currentSubtasks.splice(index, 1);
+          renderSubtasksList();
+        });
+
+        item.appendChild(checkbox);
+        item.appendChild(label);
+        item.appendChild(delBtn);
+        subtasksList.appendChild(item);
+      });
+    }
+
+    function addSubtask() {
+      const title = subtaskInput.value.trim();
+      if (!title) return;
+      currentSubtasks.push({
+        id: Date.now().toString() + Math.random().toString(16).slice(2),
+        title,
+        done: false
+      });
+      subtaskInput.value = '';
+      renderSubtasksList();
+      subtaskInput.focus();
+    }
+
+    // Rendering tasks in table
     function renderTasks() {
       taskTableBody.innerHTML = '';
 
@@ -946,7 +1094,7 @@
       if (filtered.length === 0) {
         const emptyRow = document.createElement('tr');
         const td = document.createElement('td');
-        td.colSpan = 8;
+        td.colSpan = 7;
         td.className = 'text-muted';
         td.style.textAlign = 'center';
         td.style.padding = '20px';
@@ -969,7 +1117,7 @@
         const headerRow = document.createElement('tr');
         headerRow.className = 'group-header-row';
         const headerTd = document.createElement('td');
-        headerTd.colSpan = 8;
+        headerTd.colSpan = 7;
 
         const headerContent = document.createElement('div');
         headerContent.className = 'group-header-content';
@@ -1054,10 +1202,38 @@
           areaTd.appendChild(areaSpan);
           row.appendChild(areaTd);
 
-          // Opgave
+          // Opgave + underopgaver
           const taskTd = document.createElement('td');
           taskTd.dataset.label = 'Opgave';
-          taskTd.textContent = task.task;
+          const titleDiv = document.createElement('div');
+          titleDiv.className = 'task-title';
+          titleDiv.textContent = task.task;
+          taskTd.appendChild(titleDiv);
+
+          const totalSubtasks = Array.isArray(task.subtasks) ? task.subtasks.length : 0;
+          if (totalSubtasks > 0) {
+            const doneSubtasks = task.subtasks.filter(st => st.done).length;
+            const pct = Math.round((doneSubtasks / totalSubtasks) * 100);
+
+            const metaDiv = document.createElement('div');
+            metaDiv.className = 'subtasks-meta';
+
+            const countSpan = document.createElement('span');
+            countSpan.className = 'subtasks-count';
+            countSpan.textContent = `${doneSubtasks} / ${totalSubtasks}`;
+            metaDiv.appendChild(countSpan);
+
+            const bar = document.createElement('div');
+            bar.className = 'subtasks-progress';
+            const fill = document.createElement('div');
+            fill.className = 'subtasks-progress-fill';
+            fill.style.width = pct + '%';
+            bar.appendChild(fill);
+            metaDiv.appendChild(bar);
+
+            taskTd.appendChild(metaDiv);
+          }
+
           row.appendChild(taskTd);
 
           // Intern kontakt
@@ -1103,12 +1279,6 @@
           notesTd.appendChild(notesBadge);
           row.appendChild(notesTd);
 
-          // Sidst ændret
-          const lastModTd = document.createElement('td');
-          lastModTd.dataset.label = 'Sidst ændret';
-          lastModTd.textContent = formatShortDateFromTimestamp(task.lastModified);
-          row.appendChild(lastModTd);
-
           row.addEventListener('click', () => {
             openTaskModal(task.id);
           });
@@ -1134,9 +1304,7 @@
         modalDeadline.value = task.deadline || '';
         modalStatus.value = task.status || 'not-started';
         modalNotes.value = task.notes || '';
-
-        modalLastModified.style.display = 'block';
-        modalLastModified.textContent = 'Sidst ændret: ' + formatShortDateFromTimestamp(task.lastModified);
+        currentSubtasks = Array.isArray(task.subtasks) ? JSON.parse(JSON.stringify(task.subtasks)) : [];
         deleteTaskBtn.style.display = 'inline-flex';
       } else {
         taskModalTitle.textContent = 'Tilføj opgave';
@@ -1147,11 +1315,11 @@
         modalDeadline.value = '';
         modalStatus.value = 'not-started';
         modalNotes.value = '';
-
-        modalLastModified.style.display = 'none';
+        currentSubtasks = [];
         deleteTaskBtn.style.display = 'none';
       }
 
+      renderSubtasksList();
       taskModalBackdrop.classList.add('visible');
       modalArea.focus();
     }
@@ -1159,6 +1327,7 @@
     function closeTaskModal() {
       taskModalBackdrop.classList.remove('visible');
       currentEditTaskId = null;
+      currentSubtasks = [];
     }
 
     function saveTaskFromModal() {
@@ -1187,6 +1356,7 @@
         existing.deadline = deadline;
         existing.status = status;
         existing.notes = notes;
+        existing.subtasks = currentSubtasks;
         existing.lastModified = now;
       } else {
         const newTask = {
@@ -1198,6 +1368,7 @@
           deadline,
           status,
           notes,
+          subtasks: currentSubtasks,
           lastModified: now
         };
         tasks.push(newTask);
@@ -1269,6 +1440,14 @@
     sortDirectionSelect.addEventListener('change', () => {
       sortDirection = sortDirectionSelect.value;
       renderTasks();
+    });
+
+    addSubtaskBtn.addEventListener('click', addSubtask);
+    subtaskInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addSubtask();
+      }
     });
 
     // Initial load
