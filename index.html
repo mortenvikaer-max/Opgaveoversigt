@@ -43,7 +43,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 24px;
+      padding: 8px 24px;
       border-bottom: 1px solid #e5e7eb;
       box-shadow: 0 1px 4px rgba(0,0,0,0.02);
       position: sticky;
@@ -58,17 +58,10 @@
       gap: 10px;
     }
 
-    .topbar-logo {
-      width: 26px;
-      height: 26px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #2563eb, #14b8a6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      font-size: 0.9rem;
-      font-weight: 700;
+    .topbar-logo-img {
+      height: 28px;
+      width: auto;
+      display: block;
     }
 
     .topbar-title {
@@ -98,8 +91,7 @@
     }
 
     h1 {
-      margin: 18px 0 16px;
-      font-size: 1.5rem;
+      display: none; /* Fjern visning af "Opgaveoversigt" som overskrift */
     }
 
     .card {
@@ -187,7 +179,7 @@
     }
 
     .search-input input {
-      padding: 7px 28px 7px 24px;
+      padding: 7px 10px;
       border-radius: 999px;
       border: 1px solid #d0d7e2;
       background: #f9fafb;
@@ -199,16 +191,6 @@
       border-color: var(--accent);
       box-shadow: 0 0 0 2px var(--accent-soft);
       background: #ffffff;
-    }
-
-    .search-input::before {
-      content: "🔍";
-      position: absolute;
-      left: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.8rem;
-      opacity: 0.7;
     }
 
     .select-pill {
@@ -336,7 +318,7 @@
     }
 
     .group-toggle {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--text-muted);
     }
 
@@ -405,36 +387,15 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      max-width: 150px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .notes-indicator.has-notes {
       background: #dbeafe;
       color: #1d4ed8;
-    }
-
-    /* Handlinger */
-    .action-buttons {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .icon-button {
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      padding: 4px;
-      border-radius: 6px;
-      font-size: 0.9rem;
-    }
-
-    .icon-button:hover {
-      background: #e5e7eb;
-    }
-
-    .icon-delete:hover {
-      background: #fee2e2;
-      color: #b91c1c;
     }
 
     /* Modal generelt */
@@ -617,7 +578,7 @@
 <body>
   <header class="topbar">
     <div class="topbar-left">
-      <div class="topbar-logo">O</div>
+      <img src="logo.png" alt="Logo" class="topbar-logo-img">
       <div class="topbar-title">Opgavestyring</div>
     </div>
     <div class="topbar-right">
@@ -685,15 +646,14 @@
         <table>
           <thead>
             <tr>
+              <th>Status</th>
               <th>Område</th>
               <th>Opgave</th>
               <th>Kontakt (intern)</th>
               <th>Kontakt (ekstern)</th>
               <th>Deadline</th>
-              <th>Status</th>
-              <th>Sidst ændret</th>
               <th>Noter</th>
-              <th>Handlinger</th>
+              <th>Sidst ændret</th>
             </tr>
           </thead>
           <tbody id="taskTableBody">
@@ -813,28 +773,24 @@
     const modalStatus = document.getElementById('modalStatus');
     const modalNotes = document.getElementById('modalNotes');
 
-    function formatDate(dateStr) {
+    function formatShortDate(dateStr) {
       if (!dateStr) return '';
       const date = new Date(dateStr);
       if (isNaN(date.getTime())) return dateStr;
-      return date.toLocaleDateString('da-DK', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-      });
+      const d = date.getDate();
+      const m = date.getMonth() + 1;
+      const y = date.getFullYear() % 100;
+      return `${d}-${m}-${y.toString().padStart(2, '0')}`;
     }
 
-    function formatDateTimeFromTimestamp(ts) {
+    function formatShortDateFromTimestamp(ts) {
       if (!ts) return '';
       const date = new Date(ts);
       if (isNaN(date.getTime())) return '';
-      return date.toLocaleString('da-DK', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+      const d = date.getDate();
+      const m = date.getMonth() + 1;
+      const y = date.getFullYear() % 100;
+      return `${d}-${m}-${y.toString().padStart(2, '0')}`;
     }
 
     function getStatusLabel(statusValue) {
@@ -989,7 +945,7 @@
       if (filtered.length === 0) {
         const emptyRow = document.createElement('tr');
         const td = document.createElement('td');
-        td.colSpan = 9;
+        td.colSpan = 8;
         td.className = 'text-muted';
         td.style.textAlign = 'center';
         td.style.padding = '20px';
@@ -1012,7 +968,7 @@
         const headerRow = document.createElement('tr');
         headerRow.className = 'group-header-row';
         const headerTd = document.createElement('td');
-        headerTd.colSpan = 9;
+        headerTd.colSpan = 8;
 
         const headerContent = document.createElement('div');
         headerContent.className = 'group-header-content';
@@ -1041,7 +997,7 @@
 
         const toggleSpan = document.createElement('span');
         toggleSpan.className = 'group-toggle';
-        toggleSpan.textContent = collapsedGroups[statusValue] ? '▸ Vis' : '▾ Skjul';
+        toggleSpan.textContent = collapsedGroups[statusValue] ? '▸' : '▾';
 
         headerContent.appendChild(leftDiv);
         headerContent.appendChild(toggleSpan);
@@ -1062,7 +1018,6 @@
         // Sortér opgaver i gruppen
         const sortedGroup = [...groupTasks].sort((a, b) => {
           if (sortBy === 'status') {
-            // Sekundært sorterer vi på deadline, hvis status er valgt
             const ad = a.deadline || '';
             const bd = b.deadline || '';
             let comp = 0;
@@ -1079,6 +1034,15 @@
         sortedGroup.forEach(task => {
           const row = document.createElement('tr');
           row.className = 'task-row';
+
+          // Status (første kolonne)
+          const statusTd = document.createElement('td');
+          statusTd.dataset.label = 'Status';
+          const statusSpan = document.createElement('span');
+          statusSpan.className = 'status-pill ' + getStatusClass(task.status);
+          statusSpan.textContent = getStatusLabel(task.status);
+          statusTd.appendChild(statusSpan);
+          row.appendChild(statusTd);
 
           // Område
           const areaTd = document.createElement('td');
@@ -1119,77 +1083,30 @@
           // Deadline
           const deadlineTd = document.createElement('td');
           deadlineTd.dataset.label = 'Deadline';
-          deadlineTd.textContent = formatDate(task.deadline);
+          deadlineTd.textContent = formatShortDate(task.deadline);
           row.appendChild(deadlineTd);
-
-          // Status
-          const statusTd = document.createElement('td');
-          statusTd.dataset.label = 'Status';
-          const statusSpan = document.createElement('span');
-          statusSpan.className = 'status-pill ' + getStatusClass(task.status);
-          statusSpan.textContent = getStatusLabel(task.status);
-          statusTd.appendChild(statusSpan);
-          row.appendChild(statusTd);
-
-          // Sidst ændret
-          const lastModTd = document.createElement('td');
-          lastModTd.dataset.label = 'Sidst ændret';
-          lastModTd.textContent = formatDateTimeFromTimestamp(task.lastModified);
-          row.appendChild(lastModTd);
 
           // Noter
           const notesTd = document.createElement('td');
           notesTd.dataset.label = 'Noter';
           const notesBadge = document.createElement('span');
-          notesBadge.className = 'notes-indicator' + (task.notes && task.notes.trim() ? ' has-notes' : '');
-          notesBadge.innerHTML = task.notes && task.notes.trim()
-            ? '📝 Noter'
-            : '–';
+          if (task.notes && task.notes.trim()) {
+            notesBadge.className = 'notes-indicator has-notes';
+            notesBadge.textContent = 'Noter';
+            notesBadge.title = task.notes;
+          } else {
+            notesBadge.className = 'notes-indicator';
+            notesBadge.textContent = '–';
+            notesBadge.title = '';
+          }
           notesTd.appendChild(notesBadge);
           row.appendChild(notesTd);
 
-          // Handlinger
-          const actionsTd = document.createElement('td');
-          actionsTd.dataset.label = 'Handlinger';
-          const actionsDiv = document.createElement('div');
-          actionsDiv.className = 'action-buttons';
-
-          const editBtn = document.createElement('button');
-          editBtn.type = 'button';
-          editBtn.className = 'icon-button';
-          editBtn.title = 'Redigér opgave';
-          editBtn.textContent = '✏️';
-
-          editBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            openTaskModal(task.id);
-          });
-
-          const notesBtn = document.createElement('button');
-          notesBtn.type = 'button';
-          notesBtn.className = 'icon-button';
-          notesBtn.title = 'Redigér noter';
-          notesBtn.textContent = '📝';
-          notesBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            openTaskModal(task.id, { focusField: 'notes' });
-          });
-
-          const deleteBtn = document.createElement('button');
-          deleteBtn.type = 'button';
-          deleteBtn.className = 'icon-button icon-delete';
-          deleteBtn.title = 'Slet opgave';
-          deleteBtn.textContent = '🗑️';
-          deleteBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            deleteTask(task.id);
-          });
-
-          actionsDiv.appendChild(editBtn);
-          actionsDiv.appendChild(notesBtn);
-          actionsDiv.appendChild(deleteBtn);
-          actionsTd.appendChild(actionsDiv);
-          row.appendChild(actionsTd);
+          // Sidst ændret (yderst til højre)
+          const lastModTd = document.createElement('td');
+          lastModTd.dataset.label = 'Sidst ændret';
+          lastModTd.textContent = formatShortDateFromTimestamp(task.lastModified);
+          row.appendChild(lastModTd);
 
           row.addEventListener('click', () => {
             openTaskModal(task.id);
@@ -1201,8 +1118,7 @@
     }
 
     // Modal
-    function openTaskModal(taskId = null, options = {}) {
-      const focusField = options.focusField || 'area';
+    function openTaskModal(taskId = null) {
       currentEditTaskId = taskId;
 
       if (taskId) {
@@ -1219,7 +1135,7 @@
         modalNotes.value = task.notes || '';
 
         modalLastModified.style.display = 'block';
-        modalLastModified.textContent = 'Sidst ændret: ' + formatDateTimeFromTimestamp(task.lastModified);
+        modalLastModified.textContent = 'Sidst ændret: ' + formatShortDateFromTimestamp(task.lastModified);
         deleteTaskBtn.style.display = 'inline-flex';
       } else {
         taskModalTitle.textContent = 'Tilføj opgave';
@@ -1236,11 +1152,7 @@
       }
 
       taskModalBackdrop.classList.add('visible');
-      if (focusField === 'notes') {
-        modalNotes.focus();
-      } else {
-        modalArea.focus();
-      }
+      modalArea.focus();
     }
 
     function closeTaskModal() {
