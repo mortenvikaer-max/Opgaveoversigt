@@ -128,6 +128,32 @@
       gap: 4px;
     }
 
+    .summary-card.highlight {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+
+    .summary-card.danger {
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+
+    .summary-card.clickable {
+      cursor: pointer;
+      transition: box-shadow 0.1s ease, transform 0.05s ease, border-color 0.1s ease, background 0.1s ease;
+    }
+
+    .summary-card.clickable:hover {
+      box-shadow: 0 3px 8px rgba(15,23,42,0.08);
+      transform: translateY(-1px);
+    }
+
+    .summary-card.clickable.active {
+      box-shadow: 0 0 0 2px #ef4444;
+      border-color: #ef4444;
+      background: #fee2e2;
+    }
+
     .summary-label {
       font-size: 0.78rem;
       color: var(--text-muted);
@@ -138,16 +164,6 @@
     .summary-value {
       font-size: 1rem;
       font-weight: 600;
-    }
-
-    .summary-card.highlight {
-      background: #eff6ff;
-      border-color: #bfdbfe;
-    }
-
-    .summary-card.danger {
-      background: #fef2f2;
-      border-color: #fecaca;
     }
 
     /* Command bar */
@@ -482,7 +498,10 @@
       box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
       max-width: 600px;
       width: 100%;
+      max-height: 90vh;
       padding: 20px 22px 18px;
+      display: flex;
+      flex-direction: column;
     }
 
     .modal-header {
@@ -490,6 +509,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
+      flex: 0 0 auto;
     }
 
     .modal-title {
@@ -509,7 +529,12 @@
 
     .modal-close:hover { background: #f1f5f9; }
 
-    .modal-body { margin-top: 4px; }
+    .modal-body {
+      margin-top: 4px;
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
 
     .field-group { margin-bottom: 12px; }
 
@@ -556,6 +581,7 @@
       gap: 8px;
       margin-top: 12px;
       flex-wrap: wrap;
+      flex: 0 0 auto;
     }
 
     .modal-footer-right {
@@ -722,7 +748,7 @@
           <div class="summary-label">Afsluttet</div>
           <div class="summary-value" id="summaryDone">0</div>
         </div>
-        <div class="summary-card danger">
+        <div class="summary-card danger clickable" id="summaryHighPriorityCard">
           <div class="summary-label">Høj prioritet</div>
           <div class="summary-value" id="summaryHighPriority">0</div>
         </div>
@@ -763,13 +789,13 @@
           <thead>
             <tr>
               <th>Status</th>
-              <th>Prioritet</th>
               <th>Område</th>
               <th>Opgave</th>
               <th>Kontakt (intern)</th>
               <th>Kontakt (ekstern)</th>
               <th>Deadline</th>
               <th>Noter</th>
+              <th>Prioritet</th>
             </tr>
           </thead>
           <tbody id="taskTableBody"></tbody>
@@ -860,7 +886,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'opgaveoversigt_tasks_v3'; // ny nøgle pga. prioritet
+    const STORAGE_KEY = 'opgaveoversigt_tasks_v3';
 
     let tasks = [];
     let currentEditTaskId = null;
@@ -869,6 +895,7 @@
     let searchQuery = '';
     let filterStatus = 'all';
     let filterArea = 'all';
+    let filterHighPriorityOnly = false;
 
     const collapsedGroups = {
       'not-started': false,
@@ -909,6 +936,7 @@
     const summaryInProgressEl = document.getElementById('summaryInProgress');
     const summaryDoneEl = document.getElementById('summaryDone');
     const summaryHighPriorityEl = document.getElementById('summaryHighPriority');
+    const summaryHighPriorityCard = document.getElementById('summaryHighPriorityCard');
 
     function formatShortDate(dateStr) {
       if (!dateStr) return '';
@@ -998,6 +1026,9 @@
       }
       if (filterArea !== 'all') {
         arr = arr.filter(t => t.area === filterArea);
+      }
+      if (filterHighPriorityOnly) {
+        arr = arr.filter(t => t.priority === 'high');
       }
 
       const q = searchQuery.trim().toLowerCase();
@@ -1184,7 +1215,17 @@
 
         if (collapsedGroups[statusValue]) return;
 
-        const sortedGroup = [...groupTasks].sort(compareTasks);
+        const priorityOrder = { high: 0, medium: 1, low: 2 };
+
+        const sortedGroup = [...groupTasks].sort((a, b) => {
+          if (statusValue === 'in-progress') {
+            const pa = priorityOrder[a.priority || 'medium'];
+            const pb = priorityOrder[b.priority || 'medium'];
+            if (pa !== pb) return pa - pb;
+            return compareTasks(a, b);
+          }
+          return compareTasks(a, b);
+        });
 
         sortedGroup.forEach(task => {
           const row = document.createElement('tr');
@@ -1198,15 +1239,6 @@
           statusSpan.textContent = getStatusLabel(task.status);
           statusTd.appendChild(statusSpan);
           row.appendChild(statusTd);
-
-          // Prioritet
-          const priorityTd = document.createElement('td');
-          priorityTd.dataset.label = 'Prioritet';
-          const prioritySpan = document.createElement('span');
-          prioritySpan.className = 'priority-pill ' + getPriorityClass(task.priority);
-          prioritySpan.textContent = getPriorityLabel(task.priority);
-          priorityTd.appendChild(prioritySpan);
-          row.appendChild(priorityTd);
 
           // Område
           const areaTd = document.createElement('td');
@@ -1297,6 +1329,15 @@
           }
           notesTd.appendChild(notesBadge);
           row.appendChild(notesTd);
+
+          // Prioritet (yderst til højre)
+          const priorityTd = document.createElement('td');
+          priorityTd.dataset.label = 'Prioritet';
+          const prioritySpan = document.createElement('span');
+          prioritySpan.className = 'priority-pill ' + getPriorityClass(task.priority);
+          prioritySpan.textContent = getPriorityLabel(task.priority);
+          priorityTd.appendChild(prioritySpan);
+          row.appendChild(priorityTd);
 
           row.addEventListener('click', () => {
             openTaskModal(task.id);
@@ -1425,7 +1466,7 @@
     saveTaskBtn.addEventListener('click', saveTaskFromModal);
     deleteTaskBtn.addEventListener('click', deleteCurrentTask);
 
-    // ESC lukker stadig modal
+    // ESC lukker modal
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && taskModalBackdrop.classList.contains('visible')) {
         closeTaskModal();
@@ -1453,6 +1494,17 @@
         e.preventDefault();
         addSubtask();
       }
+    });
+
+    // Klik på "Høj prioritet"-kort for at filtrere
+    summaryHighPriorityCard.addEventListener('click', () => {
+      filterHighPriorityOnly = !filterHighPriorityOnly;
+      if (filterHighPriorityOnly) {
+        summaryHighPriorityCard.classList.add('active');
+      } else {
+        summaryHighPriorityCard.classList.remove('active');
+      }
+      renderTasks();
     });
 
     loadTasksFromStorage();
