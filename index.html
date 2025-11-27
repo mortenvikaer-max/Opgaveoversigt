@@ -1630,16 +1630,18 @@
 
         const dayTasks = tasksByDate[iso] || [];
         dayTasks.sort(compareTasks).forEach(task => {
-          const pill = document.createElement('div');
-          pill.className = 'calendar-task-pill ' + getStatusClass(task.status);
-          pill.textContent = task.task;
-          pill.title = `${task.task} (${getStatusLabel(task.status)})`;
-          pill.addEventListener('click', (e) => {
-            e.stopPropagation();
-            openTaskModal(task.id);
-          });
-          tasksContainer.appendChild(pill);
-        });
+  const pill = document.createElement('div');
+  // Brug prioritet-farverne i stedet for status
+  pill.className = 'calendar-task-pill ' + getPriorityClass(task.priority);
+  pill.textContent = task.task;
+  pill.title = `${task.task} (${getPriorityLabel(task.priority)})`;
+  pill.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openTaskModal(task.id);
+  });
+  tasksContainer.appendChild(pill);
+});
+
 
         cell.appendChild(tasksContainer);
         calendarGrid.appendChild(cell);
