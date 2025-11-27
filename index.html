@@ -413,9 +413,20 @@
     }
 
     .contact-cell {
-      display: inline-flex;
-      align-items: center;
+      display: flex;
+      align-items: flex-start;
       gap: 8px;
+    }
+
+    .contact-main {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.88rem;
+    }
+
+    .contact-extra {
+      font-size: 0.78rem;
+      color: var(--text-muted);
     }
 
     .avatar {
@@ -548,6 +559,8 @@
 
     input[type="text"],
     input[type="date"],
+    input[type="email"],
+    input[type="tel"],
     select,
     textarea {
       width: 100%;
@@ -561,6 +574,8 @@
 
     input[type="text"]:focus,
     input[type="date"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus,
     select:focus,
     textarea:focus {
       outline: none;
@@ -831,8 +846,28 @@
           </div>
 
           <div class="field-group">
+            <label for="modalInternalEmail">Mail (intern)</label>
+            <input type="email" id="modalInternalEmail" placeholder="mail@eksempel.dk">
+          </div>
+
+          <div class="field-group">
+            <label for="modalInternalPhone">Telefon (intern)</label>
+            <input type="tel" id="modalInternalPhone" placeholder="Fx 12 34 56 78">
+          </div>
+
+          <div class="field-group">
             <label for="modalExternalContact">Kontaktperson (ekstern)</label>
             <input type="text" id="modalExternalContact" placeholder="Evt. ekstern kontakt">
+          </div>
+
+          <div class="field-group">
+            <label for="modalExternalEmail">Mail (ekstern)</label>
+            <input type="email" id="modalExternalEmail" placeholder="mail@eksempel.dk">
+          </div>
+
+          <div class="field-group">
+            <label for="modalExternalPhone">Telefon (ekstern)</label>
+            <input type="tel" id="modalExternalPhone" placeholder="Fx 12 34 56 78">
           </div>
 
           <div class="field-group">
@@ -920,7 +955,11 @@
     const modalArea = document.getElementById('modalArea');
     const modalTask = document.getElementById('modalTask');
     const modalInternalContact = document.getElementById('modalInternalContact');
+    const modalInternalEmail = document.getElementById('modalInternalEmail');
+    const modalInternalPhone = document.getElementById('modalInternalPhone');
     const modalExternalContact = document.getElementById('modalExternalContact');
+    const modalExternalEmail = document.getElementById('modalExternalEmail');
+    const modalExternalPhone = document.getElementById('modalExternalPhone');
     const modalDeadline = document.getElementById('modalDeadline');
     const modalStatus = document.getElementById('modalStatus');
     const modalPriority = document.getElementById('modalPriority');
@@ -1002,6 +1041,10 @@
             if (!Array.isArray(t.subtasks)) t.subtasks = [];
             if (typeof t.lastModified !== 'number') t.lastModified = Date.now();
             if (!t.priority) t.priority = 'medium';
+            t.internalEmail = t.internalEmail || '';
+            t.internalPhone = t.internalPhone || '';
+            t.externalEmail = t.externalEmail || '';
+            t.externalPhone = t.externalPhone || '';
             return t;
           });
         }
@@ -1034,8 +1077,17 @@
       const q = searchQuery.trim().toLowerCase();
       if (q) {
         arr = arr.filter(t => {
-          return [t.area, t.task, t.internalContact, t.externalContact, t.notes]
-            .some(field => field && field.toLowerCase().includes(q));
+          return [
+            t.area,
+            t.task,
+            t.internalContact,
+            t.internalEmail,
+            t.internalPhone,
+            t.externalContact,
+            t.externalEmail,
+            t.externalPhone,
+            t.notes
+          ].some(field => field && field.toLowerCase().includes(q));
         });
       }
       return arr;
@@ -1286,16 +1338,39 @@
           // Intern kontakt
           const internalTd = document.createElement('td');
           internalTd.dataset.label = 'Kontakt (intern)';
-          if (task.internalContact) {
+          if (task.internalContact || task.internalEmail || task.internalPhone) {
             const contactDiv = document.createElement('div');
             contactDiv.className = 'contact-cell';
-            const avatar = document.createElement('div');
-            avatar.className = 'avatar';
-            avatar.textContent = getInitials(task.internalContact);
-            const nameSpan = document.createElement('span');
-            nameSpan.textContent = task.internalContact;
-            contactDiv.appendChild(avatar);
-            contactDiv.appendChild(nameSpan);
+
+            if (task.internalContact) {
+              const avatar = document.createElement('div');
+              avatar.className = 'avatar';
+              avatar.textContent = getInitials(task.internalContact);
+              contactDiv.appendChild(avatar);
+            }
+
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'contact-main';
+
+            if (task.internalContact) {
+              const nameSpan = document.createElement('span');
+              nameSpan.textContent = task.internalContact;
+              infoDiv.appendChild(nameSpan);
+            }
+            if (task.internalEmail) {
+              const emailSpan = document.createElement('span');
+              emailSpan.className = 'contact-extra';
+              emailSpan.textContent = task.internalEmail;
+              infoDiv.appendChild(emailSpan);
+            }
+            if (task.internalPhone) {
+              const phoneSpan = document.createElement('span');
+              phoneSpan.className = 'contact-extra';
+              phoneSpan.textContent = 'Tlf: ' + task.internalPhone;
+              infoDiv.appendChild(phoneSpan);
+            }
+
+            contactDiv.appendChild(infoDiv);
             internalTd.appendChild(contactDiv);
           } else {
             internalTd.textContent = '–';
@@ -1305,7 +1380,32 @@
           // Ekstern kontakt
           const externalTd = document.createElement('td');
           externalTd.dataset.label = 'Kontakt (ekstern)';
-          externalTd.textContent = task.externalContact || '–';
+          if (task.externalContact || task.externalEmail || task.externalPhone) {
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'contact-main';
+
+            if (task.externalContact) {
+              const nameSpan = document.createElement('span');
+              nameSpan.textContent = task.externalContact;
+              infoDiv.appendChild(nameSpan);
+            }
+            if (task.externalEmail) {
+              const emailSpan = document.createElement('span');
+              emailSpan.className = 'contact-extra';
+              emailSpan.textContent = task.externalEmail;
+              infoDiv.appendChild(emailSpan);
+            }
+            if (task.externalPhone) {
+              const phoneSpan = document.createElement('span');
+              phoneSpan.className = 'contact-extra';
+              phoneSpan.textContent = 'Tlf: ' + task.externalPhone;
+              infoDiv.appendChild(phoneSpan);
+            }
+
+            externalTd.appendChild(infoDiv);
+          } else {
+            externalTd.textContent = '–';
+          }
           row.appendChild(externalTd);
 
           // Deadline
@@ -1330,7 +1430,7 @@
           notesTd.appendChild(notesBadge);
           row.appendChild(notesTd);
 
-          // Prioritet (yderst til højre)
+          // Prioritet
           const priorityTd = document.createElement('td');
           priorityTd.dataset.label = 'Prioritet';
           const prioritySpan = document.createElement('span');
@@ -1359,7 +1459,11 @@
         modalArea.value = task.area || '';
         modalTask.value = task.task || '';
         modalInternalContact.value = task.internalContact || '';
+        modalInternalEmail.value = task.internalEmail || '';
+        modalInternalPhone.value = task.internalPhone || '';
         modalExternalContact.value = task.externalContact || '';
+        modalExternalEmail.value = task.externalEmail || '';
+        modalExternalPhone.value = task.externalPhone || '';
         modalDeadline.value = task.deadline || '';
         modalStatus.value = task.status || 'not-started';
         modalPriority.value = task.priority || 'medium';
@@ -1371,7 +1475,11 @@
         modalArea.value = '';
         modalTask.value = '';
         modalInternalContact.value = '';
+        modalInternalEmail.value = '';
+        modalInternalPhone.value = '';
         modalExternalContact.value = '';
+        modalExternalEmail.value = '';
+        modalExternalPhone.value = '';
         modalDeadline.value = '';
         modalStatus.value = 'not-started';
         modalPriority.value = 'medium';
@@ -1395,7 +1503,11 @@
       const area = modalArea.value.trim();
       const taskName = modalTask.value.trim();
       const internalContact = modalInternalContact.value.trim();
+      const internalEmail = modalInternalEmail.value.trim();
+      const internalPhone = modalInternalPhone.value.trim();
       const externalContact = modalExternalContact.value.trim();
+      const externalEmail = modalExternalEmail.value.trim();
+      const externalPhone = modalExternalPhone.value.trim();
       const deadline = modalDeadline.value;
       const status = modalStatus.value;
       const priority = modalPriority.value || 'medium';
@@ -1414,7 +1526,11 @@
         existing.area = area;
         existing.task = taskName;
         existing.internalContact = internalContact;
+        existing.internalEmail = internalEmail;
+        existing.internalPhone = internalPhone;
         existing.externalContact = externalContact;
+        existing.externalEmail = externalEmail;
+        existing.externalPhone = externalPhone;
         existing.deadline = deadline;
         existing.status = status;
         existing.priority = priority;
@@ -1427,7 +1543,11 @@
           area,
           task: taskName,
           internalContact,
+          internalEmail,
+          internalPhone,
           externalContact,
+          externalEmail,
+          externalPhone,
           deadline,
           status,
           priority,
