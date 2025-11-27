@@ -18,6 +18,10 @@
       --status-not-started: #ffe1e1;
       --status-in-progress: #fff7d1;
       --status-done: #dcf7e2;
+
+      --priority-low: #e0f2fe;
+      --priority-medium: #fef3c7;
+      --priority-high: #fee2e2;
     }
 
     * {
@@ -102,6 +106,48 @@
     .card-title {
       font-size: 1.05rem;
       font-weight: 600;
+    }
+
+    /* Summary boxes */
+    .summary-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .summary-card {
+      flex: 1 1 120px;
+      min-width: 120px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .summary-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .summary-value {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .summary-card.highlight {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+
+    .summary-card.danger {
+      background: #fef2f2;
+      border-color: #fecaca;
     }
 
     /* Command bar */
@@ -324,6 +370,20 @@
     .status-not-started { background: var(--status-not-started); }
     .status-in-progress { background: var(--status-in-progress); }
     .status-done        { background: var(--status-done); }
+
+    .priority-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 500;
+    }
+
+    .priority-low    { background: var(--priority-low); color: #075985; }
+    .priority-medium { background: var(--priority-medium); color: #92400e; }
+    .priority-high   { background: var(--priority-high); color: #b91c1c; }
 
     .area-tag {
       display: inline-flex;
@@ -563,6 +623,10 @@
         padding: 12px 8px 24px;
       }
 
+      .summary-row {
+        flex-direction: row;
+      }
+
       .command-bar {
         flex-direction: column;
         align-items: stretch;
@@ -640,6 +704,30 @@
         <div class="card-title">Aktuelle opgaver</div>
       </div>
 
+      <!-- Oversigtsbokse -->
+      <div class="summary-row">
+        <div class="summary-card highlight">
+          <div class="summary-label">Opgaver i alt</div>
+          <div class="summary-value" id="summaryTotal">0</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-label">Ikke begyndt</div>
+          <div class="summary-value" id="summaryNotStarted">0</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-label">I gang</div>
+          <div class="summary-value" id="summaryInProgress">0</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-label">Afsluttet</div>
+          <div class="summary-value" id="summaryDone">0</div>
+        </div>
+        <div class="summary-card danger">
+          <div class="summary-label">Høj prioritet</div>
+          <div class="summary-value" id="summaryHighPriority">0</div>
+        </div>
+      </div>
+
       <div class="command-bar">
         <div class="command-left">
           <button type="button" id="addTaskBtn" class="button-primary">
@@ -675,6 +763,7 @@
           <thead>
             <tr>
               <th>Status</th>
+              <th>Prioritet</th>
               <th>Område</th>
               <th>Opgave</th>
               <th>Kontakt (intern)</th>
@@ -735,6 +824,15 @@
           </div>
 
           <div class="field-group">
+            <label for="modalPriority">Prioritet</label>
+            <select id="modalPriority">
+              <option value="medium">Mellem</option>
+              <option value="high">Høj</option>
+              <option value="low">Lav</option>
+            </select>
+          </div>
+
+          <div class="field-group">
             <label for="modalNotes">Noter</label>
             <textarea id="modalNotes" placeholder="Tilføj noter til opgaven her..."></textarea>
           </div>
@@ -762,7 +860,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'opgaveoversigt_tasks_v2';
+    const STORAGE_KEY = 'opgaveoversigt_tasks_v3'; // ny nøgle pga. prioritet
 
     let tasks = [];
     let currentEditTaskId = null;
@@ -798,11 +896,19 @@
     const modalExternalContact = document.getElementById('modalExternalContact');
     const modalDeadline = document.getElementById('modalDeadline');
     const modalStatus = document.getElementById('modalStatus');
+    const modalPriority = document.getElementById('modalPriority');
     const modalNotes = document.getElementById('modalNotes');
 
     const subtaskInput = document.getElementById('subtaskInput');
     const addSubtaskBtn = document.getElementById('addSubtaskBtn');
     const subtasksList = document.getElementById('subtasksList');
+
+    // Summary elements
+    const summaryTotalEl = document.getElementById('summaryTotal');
+    const summaryNotStartedEl = document.getElementById('summaryNotStarted');
+    const summaryInProgressEl = document.getElementById('summaryInProgress');
+    const summaryDoneEl = document.getElementById('summaryDone');
+    const summaryHighPriorityEl = document.getElementById('summaryHighPriority');
 
     function formatShortDate(dateStr) {
       if (!dateStr) return '';
@@ -832,12 +938,21 @@
       }
     }
 
-    function getStatusOrderValue(statusValue) {
-      switch (statusValue) {
-        case 'not-started': return 0;
-        case 'in-progress': return 1;
-        case 'done':        return 2;
-        default:            return 99;
+    function getPriorityLabel(priority) {
+      switch (priority) {
+        case 'low':    return 'Lav';
+        case 'medium': return 'Mellem';
+        case 'high':   return 'Høj';
+        default:       return '';
+      }
+    }
+
+    function getPriorityClass(priority) {
+      switch (priority) {
+        case 'low':    return 'priority-low';
+        case 'medium': return 'priority-medium';
+        case 'high':   return 'priority-high';
+        default:       return '';
       }
     }
 
@@ -858,6 +973,7 @@
           tasks = parsed.map(t => {
             if (!Array.isArray(t.subtasks)) t.subtasks = [];
             if (typeof t.lastModified !== 'number') t.lastModified = Date.now();
+            if (!t.priority) t.priority = 'medium';
             return t;
           });
         }
@@ -926,6 +1042,20 @@
       }
     }
 
+    function updateSummaryCards() {
+      const total = tasks.length;
+      const notStarted = tasks.filter(t => t.status === 'not-started').length;
+      const inProgress = tasks.filter(t => t.status === 'in-progress').length;
+      const done = tasks.filter(t => t.status === 'done').length;
+      const highPriority = tasks.filter(t => t.priority === 'high').length;
+
+      summaryTotalEl.textContent = total;
+      summaryNotStartedEl.textContent = notStarted;
+      summaryInProgressEl.textContent = inProgress;
+      summaryDoneEl.textContent = done;
+      summaryHighPriorityEl.textContent = highPriority;
+    }
+
     function renderSubtasksList() {
       subtasksList.innerHTML = '';
       if (!currentSubtasks.length) {
@@ -981,13 +1111,15 @@
     }
 
     function renderTasks() {
+      updateSummaryCards();
+
       taskTableBody.innerHTML = '';
       const filtered = getFilteredTasks();
 
       if (filtered.length === 0) {
         const emptyRow = document.createElement('tr');
         const td = document.createElement('td');
-        td.colSpan = 7;
+        td.colSpan = 8;
         td.className = 'text-muted';
         td.style.textAlign = 'center';
         td.style.padding = '20px';
@@ -1006,7 +1138,7 @@
         const headerRow = document.createElement('tr');
         headerRow.className = 'group-header-row';
         const headerTd = document.createElement('td');
-        headerTd.colSpan = 7;
+        headerTd.colSpan = 8;
 
         const headerContent = document.createElement('div');
         headerContent.className = 'group-header-content';
@@ -1058,6 +1190,7 @@
           const row = document.createElement('tr');
           row.className = 'task-row';
 
+          // Status
           const statusTd = document.createElement('td');
           statusTd.dataset.label = 'Status';
           const statusSpan = document.createElement('span');
@@ -1066,6 +1199,16 @@
           statusTd.appendChild(statusSpan);
           row.appendChild(statusTd);
 
+          // Prioritet
+          const priorityTd = document.createElement('td');
+          priorityTd.dataset.label = 'Prioritet';
+          const prioritySpan = document.createElement('span');
+          prioritySpan.className = 'priority-pill ' + getPriorityClass(task.priority);
+          prioritySpan.textContent = getPriorityLabel(task.priority);
+          priorityTd.appendChild(prioritySpan);
+          row.appendChild(priorityTd);
+
+          // Område
           const areaTd = document.createElement('td');
           areaTd.dataset.label = 'Område';
           const areaSpan = document.createElement('span');
@@ -1074,6 +1217,7 @@
           areaTd.appendChild(areaSpan);
           row.appendChild(areaTd);
 
+          // Opgave
           const taskTd = document.createElement('td');
           taskTd.dataset.label = 'Opgave';
           const titleDiv = document.createElement('div');
@@ -1107,6 +1251,7 @@
 
           row.appendChild(taskTd);
 
+          // Intern kontakt
           const internalTd = document.createElement('td');
           internalTd.dataset.label = 'Kontakt (intern)';
           if (task.internalContact) {
@@ -1125,16 +1270,19 @@
           }
           row.appendChild(internalTd);
 
+          // Ekstern kontakt
           const externalTd = document.createElement('td');
           externalTd.dataset.label = 'Kontakt (ekstern)';
           externalTd.textContent = task.externalContact || '–';
           row.appendChild(externalTd);
 
+          // Deadline
           const deadlineTd = document.createElement('td');
           deadlineTd.dataset.label = 'Deadline';
           deadlineTd.textContent = formatShortDate(task.deadline);
           row.appendChild(deadlineTd);
 
+          // Noter
           const notesTd = document.createElement('td');
           notesTd.dataset.label = 'Noter';
           const notesBadge = document.createElement('span');
@@ -1173,6 +1321,7 @@
         modalExternalContact.value = task.externalContact || '';
         modalDeadline.value = task.deadline || '';
         modalStatus.value = task.status || 'not-started';
+        modalPriority.value = task.priority || 'medium';
         modalNotes.value = task.notes || '';
         currentSubtasks = Array.isArray(task.subtasks) ? JSON.parse(JSON.stringify(task.subtasks)) : [];
         deleteTaskBtn.style.display = 'inline-flex';
@@ -1184,6 +1333,7 @@
         modalExternalContact.value = '';
         modalDeadline.value = '';
         modalStatus.value = 'not-started';
+        modalPriority.value = 'medium';
         modalNotes.value = '';
         currentSubtasks = [];
         deleteTaskBtn.style.display = 'none';
@@ -1207,6 +1357,7 @@
       const externalContact = modalExternalContact.value.trim();
       const deadline = modalDeadline.value;
       const status = modalStatus.value;
+      const priority = modalPriority.value || 'medium';
       const notes = modalNotes.value;
 
       if (!area || !taskName || !deadline || !status) {
@@ -1225,6 +1376,7 @@
         existing.externalContact = externalContact;
         existing.deadline = deadline;
         existing.status = status;
+        existing.priority = priority;
         existing.notes = notes;
         existing.subtasks = currentSubtasks;
         existing.lastModified = now;
@@ -1237,6 +1389,7 @@
           externalContact,
           deadline,
           status,
+          priority,
           notes,
           subtasks: currentSubtasks,
           lastModified: now
